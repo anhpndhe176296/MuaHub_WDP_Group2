@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 import { htmlTemplateEmail, ROLE_MANAGER } from "@quanlysanbong/constants/System";
 import getObjectId from "@quanlysanbong/lib/getObjectId";
 import clientPromise from "@quanlysanbong/lib/mongodb";
@@ -5,6 +6,15 @@ import { encrypt } from "@quanlysanbong/utils/Security";
 import { NextResponse } from "next/server";
 import { sendEmail } from "@quanlysanbong/lib/sendEmail";
 import { MAIN_URL_APP } from "@quanlysanbong/constants/MainContent";
+=======
+import { htmlTemplateEmail, ROLE_MANAGER } from "@muahub/constants/System";
+import getObjectId from "@muahub/lib/getObjectId";
+import clientPromise from "@muahub/lib/mongodb";
+import { encrypt } from "@muahub/utils/Security";
+import { NextResponse } from "next/server";
+import { sendEmail } from "@muahub/lib/sendEmail";
+import { MAIN_URL_APP } from "@muahub/constants/MainContent";
+>>>>>>> Stashed changes
 import { v4 as uuidv4 } from "uuid";
 
 // API GET để lấy danh sách users
@@ -175,6 +185,7 @@ export async function PUT(req) {
 
     // Cập nhật thông tin user, bao gồm cả role và payment_package nếu có
     // Chỉ cập nhật các trường có dữ liệu mới (khác undefined)
+<<<<<<< Updated upstream
     const updateFields = {};
     if (name !== undefined) updateFields.name = name;
     if (avatar !== undefined) updateFields.avatar = avatar;
@@ -193,6 +204,26 @@ export async function PUT(req) {
 
     // Thêm payment_package nếu có
     if (payment_package !== undefined) updateFields.payment_package = payment_package;
+=======
+    const updatePackages = {};
+    if (name !== undefined) updatePackages.name = name;
+    if (avatar !== undefined) updatePackages.avatar = avatar;
+    if (phone !== undefined) updatePackages.phone = phone;
+    if (address !== undefined) updatePackages.address = address;
+    if (bio !== undefined) updatePackages.bio = bio;
+    if (active !== undefined) updatePackages.active = active;
+    if (bank_info !== undefined) updatePackages.bank_info = bank_info;
+    if (bank_info_number !== undefined) updatePackages.bank_info_number = bank_info_number;
+    updatePackages.updated_at = new Date();
+    if (payment_expiry !== undefined) updatePackages.payment_expiry = payment_expiry;
+    if (withdrawn !== undefined) updatePackages.withdrawn = withdrawn;
+
+    // Thêm role nếu có
+    if (role !== undefined) updatePackages.role = role;
+
+    // Thêm payment_package nếu có
+    if (payment_package !== undefined) updatePackages.payment_package = payment_package;
+>>>>>>> Stashed changes
 
     // Xử lý payment_type và tính toán payment_amount
     if (payment_type !== undefined) {
@@ -203,8 +234,13 @@ export async function PUT(req) {
         yearly: 10000000
       };
 
+<<<<<<< Updated upstream
       updateFields.payment_type = payment_type;
       updateFields.payment_amount = payment_amount !== undefined ? payment_amount : paymentAmounts[payment_type] || 0;
+=======
+      updatePackages.payment_type = payment_type;
+      updatePackages.payment_amount = payment_amount !== undefined ? payment_amount : paymentAmounts[payment_type] || 0;
+>>>>>>> Stashed changes
     }
 
     // Xử lý payment_history
@@ -213,10 +249,17 @@ export async function PUT(req) {
       const currentHistory = user.payment_history || [];
 
       // Thêm record mới vào mảng payment_history
+<<<<<<< Updated upstream
       updateFields.payment_history = [...currentHistory, payment_history];
     }
 
     await accountsCollection.updateOne({ _id: ObjectId }, { $set: updateFields });
+=======
+      updatePackages.payment_history = [...currentHistory, payment_history];
+    }
+
+    await accountsCollection.updateOne({ _id: ObjectId }, { $set: updatePackages });
+>>>>>>> Stashed changes
 
     return NextResponse.json({
       success: true,
@@ -231,10 +274,17 @@ export async function PUT(req) {
         role,
         payment_package,
         withdrawn,
+<<<<<<< Updated upstream
         payment_type: updateFields.payment_type,
         payment_amount: updateFields.payment_amount,
         payment_history: updateFields.payment_history,
         payment_expiry: updateFields.payment_expiry
+=======
+        payment_type: updatePackages.payment_type,
+        payment_amount: updatePackages.payment_amount,
+        payment_history: updatePackages.payment_history,
+        payment_expiry: updatePackages.payment_expiry
+>>>>>>> Stashed changes
       }
     });
   } catch (error) {
