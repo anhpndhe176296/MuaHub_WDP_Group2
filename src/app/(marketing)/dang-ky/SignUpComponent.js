@@ -1,10 +1,6 @@
 "use client";
 
-<<<<<<< Updated upstream
 import SendRequest from "@quanlysanbong/utils/SendRequest";
-=======
-import SendRequest from "@muahub/utils/SendRequest";
->>>>>>> Stashed changes
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";

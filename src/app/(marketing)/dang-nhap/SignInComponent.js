@@ -1,9 +1,5 @@
 "use client";
-<<<<<<< Updated upstream
 import SendRequest from "@quanlysanbong/utils/SendRequest";
-=======
-import SendRequest from "@muahub/utils/SendRequest";
->>>>>>> Stashed changes
 import Link from "next/link";
 import { useState } from "react";
 import toast from "react-hot-toast";
@@ -43,13 +39,8 @@ const SignInComponent = () => {
         }
         toast.success("Đăng nhập thành công");
         localStorage.setItem("token", res.payload.token);
-<<<<<<< Updated upstream
         if (res.payload.role === "admin" || res.payload.role === "sale") {
           window.location.href = `/chu-san`;
-=======
-        if (res.payload.role === "admin" || res.payload.role === "makeup_artist") {
-          window.location.href = `/makeup-artists`;
->>>>>>> Stashed changes
         }else{
           window.location.href = "/";
         }
