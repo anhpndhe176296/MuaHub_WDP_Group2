@@ -1,8 +1,16 @@
+<<<<<<< Updated upstream
 import { htmlTemplateChangePassword, htmlTemplateEmail } from "@quanlysanbong/constants/System";
 import { validateToken } from "@quanlysanbong/lib/auth";
 import clientPromise from "@quanlysanbong/lib/mongodb";
 import { sendEmail } from "@quanlysanbong/lib/sendEmail";
 import { encrypt } from "@quanlysanbong/utils/Security";
+=======
+import { htmlTemplateChangePassword, htmlTemplateEmail } from "@muahub/constants/System";
+import { validateToken } from "@muahub/lib/auth";
+import clientPromise from "@muahub/lib/mongodb";
+import { sendEmail } from "@muahub/lib/sendEmail";
+import { encrypt } from "@muahub/utils/Security";
+>>>>>>> Stashed changes
 import { NextResponse } from "next/server";
 
 export async function POST(req) {
