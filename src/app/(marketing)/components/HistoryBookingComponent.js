@@ -17,7 +17,7 @@ const HistoryBookingComponent = ({ currentUser }) => {
   const [modalHuySan, setModalHuySan] = useState(false);
   const [selectedBooking, setSelectedBooking] = useState(null);
 
-  const onHuySan = (booking) => {
+  const onHuyDichVu = (booking) => {
     setSelectedBooking(booking);
     setModalHuySan(true);
   };
@@ -262,7 +262,7 @@ const HistoryBookingComponent = ({ currentUser }) => {
 
                       <button
                         disabled={!canCancel}
-                      className="btn btn-sm btn-danger ms-2" title="Hủy dịch vụ" onClick={() => onHuySan(booking)}>
+                      className="btn btn-sm btn-danger ms-2" title="Hủy dịch vụ" onClick={() => onHuyDichVu(booking)}>
                         Hủy dịch vụ
                       </button>
                   </td>
@@ -322,7 +322,7 @@ const HistoryBookingComponent = ({ currentUser }) => {
                     </button>
 
                   {/* Hủy dịch vụ */}
-                    <button disabled={!canCancel} className="btn btn-sm btn-danger ms-2" title="Hủy dịch vụ" onClick={() => onHuySan(booking)}>
+                    <button disabled={!canCancel} className="btn btn-sm btn-danger ms-2" title="Hủy dịch vụ" onClick={() => onHuyDichVu(booking)}>
                       Hủy dịch vụ
                     </button>
                 </div>
