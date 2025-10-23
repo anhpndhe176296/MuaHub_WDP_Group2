@@ -138,18 +138,30 @@ const HeaderComponent = () => {
     window.location.href = "/";
   };
   // console.log(11111, currentUser);
+<<<<<<< Updated upstream
 console.log("showResults", showResults);
+=======
+
+>>>>>>> Stashed changes
   return (
     <div className="container-fluid position-relative p-0 header-container">
       <nav className="navbar navbar-expand-lg navbar-light px-4 px-lg-5 py-3 py-lg-0">
         <Link href="/" className="navbar-brand p-0">
           <h1 className="text-primary" style={{ display: "flex", alignItems: "center", gap: 0, margin: 0 }}>
             <img
+<<<<<<< Updated upstream
               src="/img/MuaHubLogoWhite.png"
               alt="MuaHub"
               style={{ height: "100px", objectFit: "contain", mixBlendMode: "darken", backgroundColor: "transparent", marginRight: 0 }}
             />
             <span style={{ color: "#ff5c95ff", marginLeft: "-1px", fontWeight: 700 }}>{WEB_NAME}</span>
+=======
+              src="/img/MuaHub.png"
+              alt="MuaHub"
+              style={{ height: "180px", objectFit: "contain", mixBlendMode: "darken", backgroundColor: "transparent", marginRight: 0 }}
+            />
+            <span style={{ color: "#ff5c95ff", marginLeft: "-20px", fontWeight: 700 }}>{WEB_NAME}</span>
+>>>>>>> Stashed changes
           </h1>
         </Link>
         <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
@@ -179,7 +191,11 @@ console.log("showResults", showResults);
                     className={`list-group-item list-group-item-action ${index === focusedIndex ? 'active' : ''}`}
                     onClick={() => setShowResults(false)}
                   >
+<<<<<<< Updated upstream
                     {makeup.artistName} {makeup.location ? `- ${makeup.location}` : ''}
+=======
+                    {makeup.serviceName} {makeup.location ? `- ${makeup.location}` : ''}
+>>>>>>> Stashed changes
                   </Link>
                 ))}
                 {getFilteredMakeups().length === 0 && searchValue.trim() && (
@@ -200,9 +216,12 @@ console.log("showResults", showResults);
             <Link href="/dich-vu" className={`nav-item nav-link ${pathUrl === "/dich-vu" ? "active" : ""}`}>
               Danh sách dịch vụ
             </Link>
+<<<<<<< Updated upstream
             <Link href="/yeu-thich" className={`nav-item nav-link ${pathUrl === "/yeu-thich" ? "active" : ""}`}>
               Yêu thích
             </Link>
+=======
+>>>>>>> Stashed changes
             <Link href="/lien-he" className={`nav-item nav-link ${pathUrl === "/lien-he" ? "active" : ""}`}>
               Liên hệ
             </Link>
