@@ -27,9 +27,14 @@ export async function GET(req) {
     const date = searchParams.get("date");
 
     // Build the search query dynamically based on the provided parameters
+<<<<<<< Updated upstream
     // Mặc định chỉ lấy các order đã xác nhận hoàn toàn (confirmed)
     const searchQuery = {
       // status: "confirmed",
+=======
+    const searchQuery = {
+      status: "confirmed",
+>>>>>>> Stashed changes
       fieldSlot: { $exists: true }
     };
     if (userId) searchQuery.userId = getObjectId(userId);
@@ -90,6 +95,7 @@ export async function POST(req) {
 
     const objectId = await validateToken(req);
 
+<<<<<<< Updated upstream
     let { serviceId, ownerId, field, time, date, deposit, fieldSlot, serviceLocationType, serviceLocation } = await req.json();
 
     // Lấy dữ liệu vị trí từ object serviceLocation
@@ -108,6 +114,12 @@ export async function POST(req) {
   const parsedExtraFee = extraFee ? parseInt(extraFee) : 0;
   const parsedDistanceKm = distanceKm ? parseFloat(distanceKm) : 0;
 
+=======
+    let { serviceId, ownerId, field, time, date, deposit, fieldSlot } = await req.json();
+
+    deposit = parseInt(deposit);
+
+>>>>>>> Stashed changes
     const total = deposit;
 
     deposit = (deposit * 30) / 100;
@@ -115,6 +127,7 @@ export async function POST(req) {
     // làm tròn số tiền cọc
     deposit = Math.ceil(deposit / 1000) * 1000;
 
+<<<<<<< Updated upstream
     // Check if booking is for today
     const today = new Date();
     const bookingDate = new Date(date);
@@ -123,6 +136,8 @@ export async function POST(req) {
     
     const isToday = bookingDate.getTime() === today.getTime();
     
+=======
+>>>>>>> Stashed changes
     let newOrder = {
       userId: objectId,
       serviceId: getObjectId(serviceId),
@@ -131,6 +146,7 @@ export async function POST(req) {
       time,
       deposit,
       remaining: total - deposit,
+<<<<<<< Updated upstream
       status: isToday ? "deposit_confirmed" : "pending", // Tự động xác nhận cọc nếu đặt trong ngày
       fieldSlot,
       date,
@@ -145,10 +161,17 @@ export async function POST(req) {
       },
       created_at: new Date(),
       updated_at: new Date()
+=======
+      status: "confirmed",
+      fieldSlot,
+      date,
+      created_at: new Date()
+>>>>>>> Stashed changes
     };
 
     const dataOrder = await ordersCollection.insertOne(newOrder);
 
+<<<<<<< Updated upstream
     newOrder = { ...newOrder, _id: dataOrder.insertedId };
 
     // Notification logic
@@ -197,6 +220,24 @@ export async function POST(req) {
     }
 
     return NextResponse.json({ success: true, message: "Tạo dịch vụ makeup thành công, chờ xác nhận cọc", data: newOrder });
+=======
+    const ownerData = await accountsCollection.findOne({
+      _id: getObjectId(ownerId)
+    });
+
+    await accountsCollection.updateOne(
+      { _id: getObjectId(ownerId) },
+      {
+        $set: {
+          totalPrice: (ownerData.totalPrice || 0) + deposit
+        }
+      }
+    );
+
+    newOrder = { ...newOrder, _id: dataOrder.insertedId };
+
+    return NextResponse.json({ success: true, message: "Tạo dịch vụ makeup thành công", data: newOrder });
+>>>>>>> Stashed changes
   } catch (error) {
     return NextResponse.json({ success: false, error: error.message }, { status: 500 });
   }
@@ -216,6 +257,7 @@ export async function PUT(req) {
     const ObjectId = getObjectId(id);
     await validateToken(req);
 
+<<<<<<< Updated upstream
     const order = await ordersCollection.findOne({ _id: ObjectId });
     if (!order) {
       return NextResponse.json({ success: false, message: "Dịch vụ makeup không tồn tại" }, { status: 404 });
@@ -259,6 +301,27 @@ export async function PUT(req) {
       const notificationsCollection = db.collection("notifications");
       await notificationsCollection.insertOne(notificationForUser);
     }
+=======
+    const service = await ordersCollection.findOne({ _id: ObjectId });
+    if (!service) {
+      return NextResponse.json({ success: false, message: "Dịch vụ makeup không tồn tại" }, { status: 404 });
+    }
+
+    const ownerId = service.ownerId;
+
+    const ownerData = await accountsCollection.findOne({
+      _id: ownerId
+    });
+
+    await accountsCollection.updateOne(
+      { _id: ownerId },
+      {
+        $set: {
+          totalPrice: (ownerData.totalPrice || 0) + service.deposit
+        }
+      }
+    );
+>>>>>>> Stashed changes
 
     await ordersCollection.updateOne(
       { _id: ObjectId },
