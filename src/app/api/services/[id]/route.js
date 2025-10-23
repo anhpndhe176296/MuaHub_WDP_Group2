@@ -61,7 +61,11 @@ export async function PUT(req, { params }) {
   }
 }
 
+<<<<<<< Updated upstream
 // API PATCH - Cập nhật thông tin sang dịch vụ makeup
+=======
+// API PATCH - Cập nhật thông tin từ sân sang dịch vụ makeup
+>>>>>>> Stashed changes
 export async function PATCH(req, { params }) {
   try {
     const client = await clientPromise;
