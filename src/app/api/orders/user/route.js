@@ -29,7 +29,6 @@ export async function GET(req) {
     // Build the search query dynamically based on the provided parameters
     // Mặc định chỉ lấy các order đã xác nhận hoàn toàn (confirmed)
     const searchQuery = {
-      // status: "confirmed",
       fieldSlot: { $exists: true }
     };
     if (userId) searchQuery.userId = getObjectId(userId);
@@ -90,23 +89,9 @@ export async function POST(req) {
 
     const objectId = await validateToken(req);
 
-    let { serviceId, ownerId, field, time, date, deposit, fieldSlot, serviceLocationType, serviceLocation } = await req.json();
-
-    // Lấy dữ liệu vị trí từ object serviceLocation
-    const {
-      extraFee = 0,
-      distanceKm = 0,
-      customerLat = null,
-      customerLng = null,
-      studioLat = null,
-      studioLng = null
-    } = serviceLocation || {};
+    let { serviceId, ownerId, field, time, date, deposit, fieldSlot } = await req.json();
 
     deposit = parseInt(deposit);
-
-  // Chuyển đổi kiểu dữ liệu nếu cần
-  const parsedExtraFee = extraFee ? parseInt(extraFee) : 0;
-  const parsedDistanceKm = distanceKm ? parseFloat(distanceKm) : 0;
 
     const total = deposit;
 
@@ -134,15 +119,6 @@ export async function POST(req) {
       status: isToday ? "deposit_confirmed" : "pending", // Tự động xác nhận cọc nếu đặt trong ngày
       fieldSlot,
       date,
-      serviceLocationType: serviceLocationType || null,
-      serviceLocation: {
-        extraFee: parsedExtraFee,
-        distanceKm: parsedDistanceKm,
-        customerLat,
-        customerLng,
-        studioLat,
-        studioLng
-      },
       created_at: new Date(),
       updated_at: new Date()
     };
@@ -154,18 +130,14 @@ export async function POST(req) {
     // Notification logic
     const notificationsCollection = db.collection("notifications");
     const now = new Date();
-
-    // Lấy thông tin user để lấy email hoặc phone
-    const userInfo = await accountsCollection.findOne({ _id: objectId }, { projection: { email: 1, phone: 1 } });
-    const userIdentifier = userInfo?.email || userInfo?.phone || objectId;
-
+    
     // Only notify admin for future bookings that need deposit confirmation
     if (!isToday) {
       await notificationsCollection.insertOne({
         userId: null, // or 'admin', adjust as needed
         type: "admin",
         orderId: newOrder._id,
-        message: `Có đơn đặt dịch vụ mới từ user ${userIdentifier}`,
+        message: `Có đơn đặt dịch vụ mới từ user ${objectId}`,
         isRead: false,
         created_at: now,
         updated_at: now
