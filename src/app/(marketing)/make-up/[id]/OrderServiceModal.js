@@ -7,12 +7,16 @@ import SendRequest from "@muahub/utils/SendRequest";
 import { ACCOUNT_NO, ACQ_ID, WEB_NAME } from "@muahub/constants/MainContent";
 import Link from "next/link";
 import { v4 as uuidv4 } from "uuid";
+import FormMakeupLocation from "./FormMakeupLocation";
 
 const OrderServiceModal = ({ open, onClose, serviceData }) => {
-  const [selectedDate, setSelectedDate] = useState(""),
-    [selectedField, setSelectedField] = useState(""),
-    [errorMessage, setErrorMessage] = useState(""),
-    [orderDone, setOrderDone] = useState(false);
+
+  const [selectedDate, setSelectedDate] = useState("");
+  const [selectedField, setSelectedField] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+  const [orderDone, setOrderDone] = useState(false);
+  const [latitude, setLatitude] = useState(16.0544);
+  const [longitude, setLongitude] = useState(108.2022);
 
   const [qrCode, setQrCode] = useState("");
   const [payosQr, setPayosQr] = useState("");
@@ -21,7 +25,16 @@ const OrderServiceModal = ({ open, onClose, serviceData }) => {
   const [dataOrder, setDataOrder] = useState([]);
 
   const [selectedFieldSlot, setSelectedFieldSlot] = useState([]); // {time: "7:00-8:00", fieldIndex: 2}
-
+  const [bookedSlots, setBookedSlots] = useState([]); // [{time, fieldSlot}]
+  const [makeupLocation, setMakeupLocation] = useState(""); // 'at-home' | 'at-studio'
+  const [serviceLocation, setServiceLocation] = useState({
+    extraFee: 0,
+    distanceKm: 0,
+    customerLat: null,
+    customerLng: null,
+    studioLat: latitude,
+    studioLng: longitude
+  });
   // useEffect(() => {
   //   const fetchOrderData = async () => {
   //     const res = await SendRequest("GET", `/api/orders?serviceId=${serviceData._id}`);
@@ -56,6 +69,7 @@ const OrderServiceModal = ({ open, onClose, serviceData }) => {
     setSelectedDate("");
     setSelectedField("");
     setSelectedFieldSlot([]);
+    setMakeupLocation("");
 
     // Gọi hàm onClose từ parent component
     onClose();
@@ -135,14 +149,50 @@ const OrderServiceModal = ({ open, onClose, serviceData }) => {
 
   // Thêm state để lưu dịch vụ makeup đã chọn cụ thể
 
-  // Reset selectedFieldSlot khi thay đổi ngày hoặc loại dịch vụ makeup
+
+  // Lấy danh sách slot đã đặt khi thay đổi ngày hoặc dịch vụ
   useEffect(() => {
     setSelectedFieldSlot([]);
-  }, [selectedDate, selectedField]);
+    setBookedSlots([]);
+    if (!selectedDate || !serviceData?._id) return;
+    const fetchBookedSlots = async () => {
+      try {
+        const res = await fetch(`/api/orders/booked-slots?serviceId=${serviceData._id}&date=${selectedDate}`);
+        const data = await res.json();
+        if (data.success && Array.isArray(data.slots)) {
+          setBookedSlots(data.slots);
+        }
+      } catch (err) {
+        // silent
+      }
+    };
+    fetchBookedSlots();
+  }, [selectedDate, serviceData?._id]);
+
 
   const handleOrder = async () => {
+    setErrorMessage("");
     const payloadArr = [];
     let orderCost = 0;
+    // Kiểm tra trùng slot trước khi đặt
+    for (let slot of selectedFieldSlot) {
+      const checkRes = await fetch("/api/orders/check-slot", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          serviceId: serviceData._id,
+          date: selectedDate,
+          time: slot.time,
+          fieldSlot: slot.fieldIndex
+        })
+      });
+      const checkData = await checkRes.json();
+      if (checkData.exists) {
+        setErrorMessage(`Khung giờ ${slot.time} - Slot ${slot.fieldIndex + 1} đã được đặt. Vui lòng chọn slot khác.`);
+        return;
+      }
+    }
+
     selectedFieldSlot.forEach((slot) => {
       const payload = {
         serviceId: serviceData._id,
@@ -152,7 +202,17 @@ const OrderServiceModal = ({ open, onClose, serviceData }) => {
         time: slot.time,
         date: selectedDate,
         fieldSlot: slot.fieldIndex,
-        status: "confirmed"
+        location: makeupLocation,
+        status: "pending",
+        serviceLocationType: makeupLocation === 'at-home' ? 'home' : (makeupLocation === 'at-studio' ? 'studio' : null),
+        serviceLocation: {
+          extraFee: serviceLocation.extraFee,
+          distanceKm: serviceLocation.distanceKm,
+          customerLat: serviceLocation.customerLat,
+          customerLng: serviceLocation.customerLng,
+          studioLat: serviceLocation.studioLat,
+          studioLng: serviceLocation.studioLng
+        },
       };
       orderCost += payload.deposit * 0.3;
       payloadArr.push(payload);
@@ -217,7 +277,12 @@ const OrderServiceModal = ({ open, onClose, serviceData }) => {
     // Nếu chưa chọn, thêm vào
     setSelectedFieldSlot([...selectedFieldSlot, { time, fieldIndex }]);
   };
-
+// console.log('serviceLocation:', serviceLocation);
+// console.log('serviceLocation full detail', extra)
+  // Theo dõi thay đổi serviceLocation để debug
+  useEffect(() => {
+    console.log('serviceLocation (debug):', serviceLocation);
+  }, [serviceLocation]);
   return (
     <Modal show={open} onHide={onClose} centered size="lg" backdrop="static">
       <Modal.Header closeButton>
@@ -235,7 +300,7 @@ const OrderServiceModal = ({ open, onClose, serviceData }) => {
                 <strong>Ngày đặt:</strong> {convertDateFormat(selectedDate)}
               </div>
               <div className="col-sm-6">
-                <strong>Dịch vụ:</strong> {serviceData.packages[selectedField].name}
+                <strong>Dịch vụ:</strong> {selectedField && serviceData?.packages?.[selectedField]?.name || 'Chưa chọn'}
               </div>
             </div>
 
@@ -250,16 +315,20 @@ const OrderServiceModal = ({ open, onClose, serviceData }) => {
               </ul>
             </div>
 
+            <div className="mb-3">
+              <strong>Địa điểm:</strong> {makeupLocation === 'at-studio' ? 'Đến studio' : makeupLocation === 'at-home' ? 'Đến tận nơi' : 'Chưa chọn'}
+            </div>
+
             <div className="row mb-2">
               <div className="col-sm-6">
                 <strong>Tiền cọc (30%):</strong>
                 <br />
-                {formatCurrency(serviceData.packages[selectedField].price * 0.3 * selectedFieldSlot.length)}
+                {formatCurrency(serviceData?.packages[selectedField]?.price * 0.3 * selectedFieldSlot?.length)}
               </div>
               <div className="col-sm-6">
                 <strong>Cần thanh toán (70%):</strong>
                 <br />
-                {formatCurrency(serviceData.packages[selectedField].price * 0.7 * selectedFieldSlot.length)}
+                {formatCurrency(serviceData?.packages[selectedField]?.price * 0.7 * selectedFieldSlot?.length)}
               </div>
             </div>
 
@@ -302,6 +371,14 @@ const OrderServiceModal = ({ open, onClose, serviceData }) => {
           </div>
         ) : (
           <Form>
+            <FormMakeupLocation
+              makeupLocation={makeupLocation}
+              setMakeupLocation={setMakeupLocation}
+              latitude={latitude}
+              longitude={longitude}
+              serviceLocation={serviceLocation}
+              setServiceLocation={setServiceLocation}
+            />
             <Form.Group className="mb-3">
               <Form.Label>Chọn phương thức thanh toán</Form.Label>
               <div className="d-flex gap-2">
@@ -446,8 +523,12 @@ const OrderServiceModal = ({ open, onClose, serviceData }) => {
                               </p>
                             </td>
                             {Array.from({ length: maxCapacity }, (_, fieldIndex) => {
-                              const isOccupied = false;
-                              const canSelect = true;
+
+                              // Kiểm tra slot đã bị đặt chưa
+                              const isOccupied = bookedSlots.some(
+                                (s) => s.time === time && s.fieldSlot === fieldIndex
+                              );
+                              const canSelect = !isOccupied;
 
                               // Kiểm tra xem ô này có được chọn không
                               const isThisSlotSelected = selectedFieldSlot.some(
