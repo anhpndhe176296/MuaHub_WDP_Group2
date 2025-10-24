@@ -1,8 +1,11 @@
 "use client";
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 
 import { useEffect, useState } from "react";
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 import { formatCurrency } from "@muahub/utils/Main";
@@ -10,6 +13,7 @@ import Link from "next/link";
 import "@muahub/styles/makeup-artist-enhancements.css";
 
 const BoxFieldComponent = ({ field, showDistance = false, distance, showBookingCount = false, bookingCount = 0 }) => {
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
   // Yêu thích: lưu trong localStorage theo id dịch vụ
   const [isFavorite, setIsFavorite] = useState(false);
@@ -35,6 +39,8 @@ const BoxFieldComponent = ({ field, showDistance = false, distance, showBookingC
     }
     localStorage.setItem("favoriteServices", JSON.stringify(favs));
   };
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
   // Xử lý tên artist - ưu tiên artistName, sau đó serviceName
@@ -113,6 +119,7 @@ const BoxFieldComponent = ({ field, showDistance = false, distance, showBookingC
             <i className="fas fa-palette"></i>
           </div>
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
           {/* Icon trái tim yêu thích */}
           <button
             className="favorite-btn position-absolute top-0 start-0 m-2 btn btn-link p-0"
@@ -122,6 +129,8 @@ const BoxFieldComponent = ({ field, showDistance = false, distance, showBookingC
           >
             <i className={isFavorite ? "fas fa-heart" : "far fa-heart"}></i>
           </button>
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
           <div className="position-absolute top-0 end-0 p-2">

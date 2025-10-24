@@ -139,7 +139,11 @@ const HeaderComponent = () => {
   };
   // console.log(11111, currentUser);
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 console.log("showResults", showResults);
+=======
+
+>>>>>>> Stashed changes
 =======
 
 >>>>>>> Stashed changes
@@ -150,17 +154,23 @@ console.log("showResults", showResults);
           <h1 className="text-primary" style={{ display: "flex", alignItems: "center", gap: 0, margin: 0 }}>
             <img
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
               src="/img/MuaHubLogoWhite.png"
               alt="MuaHub"
               style={{ height: "100px", objectFit: "contain", mixBlendMode: "darken", backgroundColor: "transparent", marginRight: 0 }}
             />
             <span style={{ color: "#ff5c95ff", marginLeft: "-1px", fontWeight: 700 }}>{WEB_NAME}</span>
 =======
+=======
+>>>>>>> Stashed changes
               src="/img/MuaHub.png"
               alt="MuaHub"
               style={{ height: "180px", objectFit: "contain", mixBlendMode: "darken", backgroundColor: "transparent", marginRight: 0 }}
             />
             <span style={{ color: "#ff5c95ff", marginLeft: "-20px", fontWeight: 700 }}>{WEB_NAME}</span>
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
           </h1>
         </Link>
@@ -192,7 +202,11 @@ console.log("showResults", showResults);
                     onClick={() => setShowResults(false)}
                   >
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
                     {makeup.artistName} {makeup.location ? `- ${makeup.location}` : ''}
+=======
+                    {makeup.serviceName} {makeup.location ? `- ${makeup.location}` : ''}
+>>>>>>> Stashed changes
 =======
                     {makeup.serviceName} {makeup.location ? `- ${makeup.location}` : ''}
 >>>>>>> Stashed changes
@@ -217,9 +231,12 @@ console.log("showResults", showResults);
               Danh sách dịch vụ
             </Link>
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
             <Link href="/yeu-thich" className={`nav-item nav-link ${pathUrl === "/yeu-thich" ? "active" : ""}`}>
               Yêu thích
             </Link>
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
             <Link href="/lien-he" className={`nav-item nav-link ${pathUrl === "/lien-he" ? "active" : ""}`}>

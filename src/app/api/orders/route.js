@@ -28,7 +28,10 @@ export async function GET(req) {
 
     // Build the search query dynamically based on the provided parameters
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     // Mặc định chỉ lấy các order đã xác nhận hoàn toàn (confirmed)
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
     const searchQuery = {
@@ -113,21 +116,28 @@ export async function POST(req) {
       deposit,
       remaining: total - deposit,
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
       status: "pending", // Chờ admin xác nhận cọc
       fieldSlot,
       date,
       created_at: new Date(),
       updated_at: new Date()
 =======
+=======
+>>>>>>> Stashed changes
       status: "confirmed",
       fieldSlot,
       date,
       created_at: new Date()
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
     };
 
     const dataOrder = await ordersCollection.insertOne(newOrder);
 
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
     newOrder = { ...newOrder, _id: dataOrder.insertedId };
 
@@ -157,6 +167,8 @@ export async function POST(req) {
 
     return NextResponse.json({ success: true, message: "Tạo dịch vụ makeup thành công, chờ xác nhận cọc", data: newOrder });
 =======
+=======
+>>>>>>> Stashed changes
     const ownerData = await accountsCollection.findOne({
       _id: getObjectId(ownerId)
     });
@@ -173,6 +185,9 @@ export async function POST(req) {
     newOrder = { ...newOrder, _id: dataOrder.insertedId };
 
     return NextResponse.json({ success: true, message: "Tạo dịch vụ makeup thành công", data: newOrder });
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
   } catch (error) {
     return NextResponse.json({ success: false, error: error.message }, { status: 500 });
@@ -193,6 +208,7 @@ export async function PUT(req) {
     const ObjectId = getObjectId(id);
     await validateToken(req);
 
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
     const order = await ordersCollection.findOne({ _id: ObjectId });
     if (!order) {
@@ -238,6 +254,8 @@ export async function PUT(req) {
       await notificationsCollection.insertOne(notificationForUser);
     }
 =======
+=======
+>>>>>>> Stashed changes
     const service = await ordersCollection.findOne({ _id: ObjectId });
     if (!service) {
       return NextResponse.json({ success: false, message: "Dịch vụ makeup không tồn tại" }, { status: 404 });
@@ -257,6 +275,9 @@ export async function PUT(req) {
         }
       }
     );
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 
     await ordersCollection.updateOne(

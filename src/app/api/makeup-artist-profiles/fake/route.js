@@ -1,4 +1,5 @@
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 import clientPromise from "@muahub/lib/mongodb";
 import { NextResponse } from "next/server";
 import { faker } from '@faker-js/faker';
@@ -57,6 +58,8 @@ export async function POST(req) {
   }
 }
 =======
+=======
+>>>>>>> Stashed changes
 import clientPromise from "@muahub/lib/mongodb";
 import { NextResponse } from "next/server";
 import { faker } from '@faker-js/faker';
@@ -114,4 +117,7 @@ export async function POST(req) {
     return NextResponse.json({ success: false, error: error.message }, { status: 500 });
   }
 }
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
