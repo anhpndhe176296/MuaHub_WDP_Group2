@@ -5,31 +5,21 @@
 <<<<<<< Updated upstream
 import { useState } from "react";
 import { Tab, Tabs, Form, Button } from "react-bootstrap";
+<<<<<<< Updated upstream
 import { useApp } from "@quanlysanbong/app/contexts/AppContext";
 =======
 import { useState, useEffect } from "react";
 import { Tab, Tabs, Form, Button, Modal } from "react-bootstrap";
 import { useApp } from "@muahub/app/contexts/AppContext";
 >>>>>>> Stashed changes
-import UpdateProfileComponent from "./UpdateProfileComponent";
-import toast from "react-hot-toast";
-import SendRequest from "@quanlysanbong/utils/SendRequest";
-import { ROLE_MANAGER } from "@quanlysanbong/constants/System";
 =======
-=======
->>>>>>> Stashed changes
-import { useState } from "react";
-import { Tab, Tabs, Form, Button } from "react-bootstrap";
 import { useApp } from "@muahub/app/contexts/AppContext";
+>>>>>>> Stashed changes
 import UpdateProfileComponent from "./UpdateProfileComponent";
 import UpdateMakeupArtistProfileComponent from "./UpdateMakeupArtistProfileComponent";
 import toast from "react-hot-toast";
 import SendRequest from "@muahub/utils/SendRequest";
 import { ROLE_MANAGER } from "@muahub/constants/System";
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
 import HistoryBookingComponent from "./HistoryBookingComponent";
 import { Alert, AlertTitle, Stack } from "@mui/material";
 import UpgradeIcon from "@mui/icons-material/Upgrade";
@@ -182,11 +172,6 @@ const UserProfileComponent = () => {
         <Tab eventKey="account" title="Cập nhật tài khoản">
           <UpdateProfileComponent currentUser={currentUser} updateUser={updateUser} />
         </Tab>
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-=======
->>>>>>> Stashed changes
               
         {/* Tab cập nhật hồ sơ chuyên gia cho MUA */}
         {currentUser.role === "makeup_artist" && (
@@ -194,10 +179,6 @@ const UserProfileComponent = () => {
             <UpdateMakeupArtistProfileComponent currentUser={currentUser} />
           </Tab>
         )}
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
 
         <Tab eventKey="password" title="Cập nhật mật khẩu">
           <Form onSubmit={handlePasswordUpdate}>

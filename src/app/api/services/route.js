@@ -17,11 +17,25 @@ export async function GET(req) {
     const searchParams = new URLSearchParams(url.search);
 
     const ownerId = searchParams.get("ownerId");
+<<<<<<< Updated upstream
+    const active = searchParams.get("active");
+
+    const findQuery = {
+      ownerId: ownerId ? getObjectId(ownerId) : { $exists: true }
+    };
+    // if (typeof active !== 'undefined') {
+    //   findQuery.active = active === 'true';
+    // }
+
+    const services = await servicesCollection
+      .find(findQuery)
+=======
 
     const services = await servicesCollection
       .find({
         ownerId: ownerId ? getObjectId(ownerId) : { $exists: true }
       })
+>>>>>>> Stashed changes
       .sort({ created_at: -1 })
       .toArray();
 
@@ -55,6 +69,10 @@ export async function POST(req) {
       packages
     } = await req.json();
 
+<<<<<<< Updated upstream
+
+=======
+>>>>>>> Stashed changes
     const newService = {
       ownerId: objectId,
       serviceName,
@@ -68,7 +86,11 @@ export async function POST(req) {
       closingTime,
       images,
       packages,
+<<<<<<< Updated upstream
+      active: typeof req.body?.active !== 'undefined' ? req.body.active : true,
+=======
       active: true,
+>>>>>>> Stashed changes
       created_at: new Date(),
       updated_at: new Date()
     };
@@ -101,7 +123,11 @@ export async function PUT(req) {
       closingTime,
       images,
       packages,
+<<<<<<< Updated upstream
+  active = true
+=======
       active = true
+>>>>>>> Stashed changes
     } = await req.json();
 
     const ObjectId = getObjectId(id);
@@ -127,7 +153,11 @@ export async function PUT(req) {
           closingTime,
           images,
           packages,
+<<<<<<< Updated upstream
+          active: typeof active !== 'undefined' ? active : true,
+=======
           active,
+>>>>>>> Stashed changes
           updated_at: new Date()
         }
       }

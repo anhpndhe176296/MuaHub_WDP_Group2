@@ -7,12 +7,17 @@ import SendRequest from "@muahub/utils/SendRequest";
 import { ACCOUNT_NO, ACQ_ID, WEB_NAME } from "@muahub/constants/MainContent";
 import Link from "next/link";
 import { v4 as uuidv4 } from "uuid";
+<<<<<<< Updated upstream
+import FormMakeupLocation from "./FormMakeupLocation";
 
 const OrderServiceModal = ({ open, onClose, serviceData }) => {
-  const [selectedDate, setSelectedDate] = useState(""),
-    [selectedField, setSelectedField] = useState(""),
-    [errorMessage, setErrorMessage] = useState(""),
-    [orderDone, setOrderDone] = useState(false);
+
+  const [selectedDate, setSelectedDate] = useState("");
+  const [selectedField, setSelectedField] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+  const [orderDone, setOrderDone] = useState(false);
+  const [latitude, setLatitude] = useState(16.0544);
+  const [longitude, setLongitude] = useState(108.2022);
 
   const [qrCode, setQrCode] = useState("");
 <<<<<<< Updated upstream
@@ -27,7 +32,30 @@ const OrderServiceModal = ({ open, onClose, serviceData }) => {
   const [dataOrder, setDataOrder] = useState([]);
 
   const [selectedFieldSlot, setSelectedFieldSlot] = useState([]); // {time: "7:00-8:00", fieldIndex: 2}
+  const [bookedSlots, setBookedSlots] = useState([]); // [{time, fieldSlot}]
+  const [makeupLocation, setMakeupLocation] = useState(""); // 'at-home' | 'at-studio'
+  const [serviceLocation, setServiceLocation] = useState({
+    extraFee: 0,
+    distanceKm: 0,
+    customerLat: null,
+    customerLng: null,
+    studioLat: latitude,
+    studioLng: longitude
+  });
+=======
 
+const OrderServiceModal = ({ open, onClose, serviceData }) => {
+  const [selectedDate, setSelectedDate] = useState(""),
+    [selectedField, setSelectedField] = useState(""),
+    [errorMessage, setErrorMessage] = useState(""),
+    [orderDone, setOrderDone] = useState(false);
+
+  const [qrCode, setQrCode] = useState("");
+  const [dataOrder, setDataOrder] = useState([]);
+
+  const [selectedFieldSlot, setSelectedFieldSlot] = useState([]); // {time: "7:00-8:00", fieldIndex: 2}
+
+>>>>>>> Stashed changes
   // useEffect(() => {
   //   const fetchOrderData = async () => {
   //     const res = await SendRequest("GET", `/api/orders?serviceId=${serviceData._id}`);
@@ -62,12 +90,15 @@ const OrderServiceModal = ({ open, onClose, serviceData }) => {
     setSelectedDate("");
     setSelectedField("");
     setSelectedFieldSlot([]);
+<<<<<<< Updated upstream
+    setMakeupLocation("");
+=======
+>>>>>>> Stashed changes
 
     // Gọi hàm onClose từ parent component
     onClose();
   };
 
-<<<<<<< Updated upstream
 <<<<<<< Updated upstream
   // Nhận thêm orderCode nếu là PayOS
   const handleGetQr = async (uuid, amount = 10000, orderCode = null) => {
@@ -119,8 +150,6 @@ const OrderServiceModal = ({ open, onClose, serviceData }) => {
       }
     }
 =======
-=======
->>>>>>> Stashed changes
   const handleGetQr = async (uuid, amount = 10000) => {
     const content = `dat coc ${uuid}`;
 
@@ -144,20 +173,13 @@ const OrderServiceModal = ({ open, onClose, serviceData }) => {
 
     const data = await res.json();
     setQrCode(data?.data?.qrDataURL || "");
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
 >>>>>>> Stashed changes
   };
 
   const today = new Date();
   const dateOptions = [];
 <<<<<<< Updated upstream
-<<<<<<< Updated upstream
   for (let i = 0; i < 30; i++) { // Cho phép chọn 30 ngày tới
-=======
-  for (let i = 0; i < 5; i++) {
->>>>>>> Stashed changes
 =======
   for (let i = 0; i < 5; i++) {
 >>>>>>> Stashed changes
@@ -181,6 +203,52 @@ const OrderServiceModal = ({ open, onClose, serviceData }) => {
 
   // Thêm state để lưu dịch vụ makeup đã chọn cụ thể
 
+<<<<<<< Updated upstream
+
+  // Lấy danh sách slot đã đặt khi thay đổi ngày hoặc dịch vụ
+  useEffect(() => {
+    setSelectedFieldSlot([]);
+    setBookedSlots([]);
+    if (!selectedDate || !serviceData?._id) return;
+    const fetchBookedSlots = async () => {
+      try {
+        const res = await fetch(`/api/orders/booked-slots?serviceId=${serviceData._id}&date=${selectedDate}`);
+        const data = await res.json();
+        if (data.success && Array.isArray(data.slots)) {
+          setBookedSlots(data.slots);
+        }
+      } catch (err) {
+        // silent
+      }
+    };
+    fetchBookedSlots();
+  }, [selectedDate, serviceData?._id]);
+
+
+  const handleOrder = async () => {
+    setErrorMessage("");
+    const payloadArr = [];
+    let orderCost = 0;
+    // Kiểm tra trùng slot trước khi đặt
+    for (let slot of selectedFieldSlot) {
+      const checkRes = await fetch("/api/orders/check-slot", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          serviceId: serviceData._id,
+          date: selectedDate,
+          time: slot.time,
+          fieldSlot: slot.fieldIndex
+        })
+      });
+      const checkData = await checkRes.json();
+      if (checkData.exists) {
+        setErrorMessage(`Khung giờ ${slot.time} - Slot ${slot.fieldIndex + 1} đã được đặt. Vui lòng chọn slot khác.`);
+        return;
+      }
+    }
+
+=======
   // Reset selectedFieldSlot khi thay đổi ngày hoặc loại dịch vụ makeup
   useEffect(() => {
     setSelectedFieldSlot([]);
@@ -189,6 +257,7 @@ const OrderServiceModal = ({ open, onClose, serviceData }) => {
   const handleOrder = async () => {
     const payloadArr = [];
     let orderCost = 0;
+>>>>>>> Stashed changes
     selectedFieldSlot.forEach((slot) => {
       const payload = {
         serviceId: serviceData._id,
@@ -198,13 +267,26 @@ const OrderServiceModal = ({ open, onClose, serviceData }) => {
         time: slot.time,
         date: selectedDate,
         fieldSlot: slot.fieldIndex,
+<<<<<<< Updated upstream
+        location: makeupLocation,
+        status: "pending",
+        serviceLocationType: makeupLocation === 'at-home' ? 'home' : (makeupLocation === 'at-studio' ? 'studio' : null),
+        serviceLocation: {
+          extraFee: serviceLocation.extraFee,
+          distanceKm: serviceLocation.distanceKm,
+          customerLat: serviceLocation.customerLat,
+          customerLng: serviceLocation.customerLng,
+          studioLat: serviceLocation.studioLat,
+          studioLng: serviceLocation.studioLng
+        },
+=======
         status: "confirmed"
+>>>>>>> Stashed changes
       };
       orderCost += payload.deposit * 0.3;
       payloadArr.push(payload);
     });
 
-<<<<<<< Updated upstream
 <<<<<<< Updated upstream
     let uuid = uuidv4();
     uuid = uuid.replace(/-/g, "");
@@ -217,15 +299,10 @@ const OrderServiceModal = ({ open, onClose, serviceData }) => {
       await handleGetQr(uuid, orderCost);
     }
 =======
-=======
->>>>>>> Stashed changes
     let uuid = uuidv4(); // Tạo UUID cho đơn hàng
     uuid = uuid.replace(/-/g, ""); // Loại bỏ dấu gạch ngang để sử dụng trong nội dung
 
     await handleGetQr(uuid, orderCost);
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
 >>>>>>> Stashed changes
 
     setTimeout(() => {
@@ -233,7 +310,6 @@ const OrderServiceModal = ({ open, onClose, serviceData }) => {
         const resPayment = await SendRequest("get", `/api/webhooks`);
         let paymentDone = false;
         if (resPayment.payload) {
-<<<<<<< Updated upstream
 <<<<<<< Updated upstream
           // console.log('resPayment.payload:', resPayment.payload);
           resPayment.payload.forEach((item) => {
@@ -257,16 +333,10 @@ const OrderServiceModal = ({ open, onClose, serviceData }) => {
             if (item.content.includes(`dat coc ${uuid}`)) {
               paymentDone = true;
 >>>>>>> Stashed changes
-=======
-          resPayment.payload.forEach((item) => {
-            if (item.content.includes(`dat coc ${uuid}`)) {
-              paymentDone = true;
->>>>>>> Stashed changes
             }
           });
         }
         if (!paymentDone) return;
-<<<<<<< Updated upstream
 <<<<<<< Updated upstream
         payloadArr.forEach(async (payload) => {
           await SendRequest("post", "/api/orders", payload);
@@ -276,8 +346,6 @@ const OrderServiceModal = ({ open, onClose, serviceData }) => {
       }, 5000);
     }, 5000);
 =======
-=======
->>>>>>> Stashed changes
         // Cập nhật trạng thái đơn hàng thành confirmed ngay lập tức
         payloadArr.forEach(async (payload) => {
           await SendRequest("post", "/api/orders", payload);
@@ -291,9 +359,6 @@ const OrderServiceModal = ({ open, onClose, serviceData }) => {
     // setSelectedDate("");
     // setSelectedField("");
     // setSelectedFieldSlot([]);
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
 >>>>>>> Stashed changes
   };
 
@@ -310,7 +375,16 @@ const OrderServiceModal = ({ open, onClose, serviceData }) => {
     // Nếu chưa chọn, thêm vào
     setSelectedFieldSlot([...selectedFieldSlot, { time, fieldIndex }]);
   };
+<<<<<<< Updated upstream
+// console.log('serviceLocation:', serviceLocation);
+// console.log('serviceLocation full detail', extra)
+  // Theo dõi thay đổi serviceLocation để debug
+  useEffect(() => {
+    console.log('serviceLocation (debug):', serviceLocation);
+  }, [serviceLocation]);
+=======
 
+>>>>>>> Stashed changes
   return (
     <Modal show={open} onHide={onClose} centered size="lg" backdrop="static">
       <Modal.Header closeButton>
@@ -318,11 +392,7 @@ const OrderServiceModal = ({ open, onClose, serviceData }) => {
       </Modal.Header>
       <Modal.Body>
 <<<<<<< Updated upstream
-<<<<<<< Updated upstream
         {(qrCode.length || payosQr.length) ? (
-=======
-        {qrCode.length ? (
->>>>>>> Stashed changes
 =======
         {qrCode.length ? (
 >>>>>>> Stashed changes
@@ -336,7 +406,11 @@ const OrderServiceModal = ({ open, onClose, serviceData }) => {
                 <strong>Ngày đặt:</strong> {convertDateFormat(selectedDate)}
               </div>
               <div className="col-sm-6">
+<<<<<<< Updated upstream
+                <strong>Dịch vụ:</strong> {selectedField && serviceData?.packages?.[selectedField]?.name || 'Chưa chọn'}
+=======
                 <strong>Dịch vụ:</strong> {serviceData.packages[selectedField].name}
+>>>>>>> Stashed changes
               </div>
             </div>
 
@@ -351,16 +425,31 @@ const OrderServiceModal = ({ open, onClose, serviceData }) => {
               </ul>
             </div>
 
+<<<<<<< Updated upstream
+            <div className="mb-3">
+              <strong>Địa điểm:</strong> {makeupLocation === 'at-studio' ? 'Đến studio' : makeupLocation === 'at-home' ? 'Đến tận nơi' : 'Chưa chọn'}
+            </div>
+
+=======
+>>>>>>> Stashed changes
             <div className="row mb-2">
               <div className="col-sm-6">
                 <strong>Tiền cọc (30%):</strong>
                 <br />
+<<<<<<< Updated upstream
+                {formatCurrency(serviceData?.packages[selectedField]?.price * 0.3 * selectedFieldSlot?.length)}
+=======
                 {formatCurrency(serviceData.packages[selectedField].price * 0.3 * selectedFieldSlot.length)}
+>>>>>>> Stashed changes
               </div>
               <div className="col-sm-6">
                 <strong>Cần thanh toán (70%):</strong>
                 <br />
+<<<<<<< Updated upstream
+                {formatCurrency(serviceData?.packages[selectedField]?.price * 0.7 * selectedFieldSlot?.length)}
+=======
                 {formatCurrency(serviceData.packages[selectedField].price * 0.7 * selectedFieldSlot.length)}
+>>>>>>> Stashed changes
               </div>
             </div>
 
@@ -376,7 +465,6 @@ const OrderServiceModal = ({ open, onClose, serviceData }) => {
             ) : (
               <div>
                 <h6 className="mb-2">
-<<<<<<< Updated upstream
 <<<<<<< Updated upstream
                   <strong>Phương thức thanh toán:</strong> {paymentMethod === "vietqr" ? "Chuyển khoản ngân hàng (VietQR)" : "Thanh toán PayOS"}
                 </h6>
@@ -400,8 +488,6 @@ const OrderServiceModal = ({ open, onClose, serviceData }) => {
                   {/* Nếu muốn hiển thị raw QR text: <div>{payosQr}</div> */}
                   {(!qrCode.length && !payosQr.length) && <Spinner animation="border" variant="primary" />}
 =======
-=======
->>>>>>> Stashed changes
                   <strong>Chuyển khoản qua ngân hàng:</strong>
                 </h6>
                 <div className="d-flex justify-content-center mt-3">
@@ -415,9 +501,6 @@ const OrderServiceModal = ({ open, onClose, serviceData }) => {
                   ) : (
                     <Spinner animation="border" variant="primary" />
                   )}
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
 >>>>>>> Stashed changes
                 </div>
               </div>
@@ -426,7 +509,14 @@ const OrderServiceModal = ({ open, onClose, serviceData }) => {
         ) : (
           <Form>
 <<<<<<< Updated upstream
-<<<<<<< Updated upstream
+            <FormMakeupLocation
+              makeupLocation={makeupLocation}
+              setMakeupLocation={setMakeupLocation}
+              latitude={latitude}
+              longitude={longitude}
+              serviceLocation={serviceLocation}
+              setServiceLocation={setServiceLocation}
+            />
             <Form.Group className="mb-3">
               <Form.Label>Chọn phương thức thanh toán</Form.Label>
               <div className="d-flex gap-2">
@@ -479,8 +569,6 @@ const OrderServiceModal = ({ open, onClose, serviceData }) => {
                 ))}
               </div>
 =======
-=======
->>>>>>> Stashed changes
             <p className="mb-2">Chọn ngày đặt lịch</p>
             <Form.Group className="mb-3" style={{ display: "flex", flexWrap: "wrap", justifyContent: "space-between" }}>
               {dateOptions.map((date, index) => (
@@ -527,9 +615,6 @@ const OrderServiceModal = ({ open, onClose, serviceData }) => {
                   </div>
                 </Button>
               ))}
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
 >>>>>>> Stashed changes
             </Form.Group>
 
@@ -596,21 +681,15 @@ const OrderServiceModal = ({ open, onClose, serviceData }) => {
                         if (
                           selectedDate ===
 <<<<<<< Updated upstream
-<<<<<<< Updated upstream
                           `${today.getFullYear()}-${(today.getMonth() + 1).toString().padStart(2, "0")}-${today
                             .getDate()
                             .toString()
                             .padStart(2, "0")}` &&
 =======
-=======
->>>>>>> Stashed changes
                             `${today.getFullYear()}-${(today.getMonth() + 1).toString().padStart(2, "0")}-${today
                               .getDate()
                               .toString()
                               .padStart(2, "0")}` &&
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
 >>>>>>> Stashed changes
                           (() => {
                             // Lấy giờ phút hiện tại
@@ -637,8 +716,17 @@ const OrderServiceModal = ({ open, onClose, serviceData }) => {
                               </p>
                             </td>
                             {Array.from({ length: maxCapacity }, (_, fieldIndex) => {
+<<<<<<< Updated upstream
+
+                              // Kiểm tra slot đã bị đặt chưa
+                              const isOccupied = bookedSlots.some(
+                                (s) => s.time === time && s.fieldSlot === fieldIndex
+                              );
+                              const canSelect = !isOccupied;
+=======
                               const isOccupied = false;
                               const canSelect = true;
+>>>>>>> Stashed changes
 
                               // Kiểm tra xem ô này có được chọn không
                               const isThisSlotSelected = selectedFieldSlot.some(
@@ -683,15 +771,9 @@ const OrderServiceModal = ({ open, onClose, serviceData }) => {
                       <ul>
                         {selectedFieldSlot.map((slot, index) => (
 <<<<<<< Updated upstream
-<<<<<<< Updated upstream
                           <li key={index}>
                             {slot.time} - Slot {slot.fieldIndex + 1}
                           </li>
-=======
-                              <li key={index}>
-                                {slot.time} - Slot {slot.fieldIndex + 1}
-                              </li>
->>>>>>> Stashed changes
 =======
                               <li key={index}>
                                 {slot.time} - Slot {slot.fieldIndex + 1}
@@ -715,7 +797,6 @@ const OrderServiceModal = ({ open, onClose, serviceData }) => {
       </Modal.Body>
       <Modal.Footer>
 <<<<<<< Updated upstream
-<<<<<<< Updated upstream
         {/* Hiển thị thông tin PayOS nếu có */}
         {/* {paymentMethod === "payos" && payosInfo && (
               <div className="alert alert-info mt-3">
@@ -727,8 +808,6 @@ const OrderServiceModal = ({ open, onClose, serviceData }) => {
                 <div><b>Link thanh toán:</b> <a href={payosInfo.checkoutUrl} target="_blank" rel="noopener noreferrer">{payosInfo.checkoutUrl}</a></div>
               </div>
             )} */}
-=======
->>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
         {orderDone ? (

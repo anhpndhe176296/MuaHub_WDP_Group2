@@ -1,6 +1,5 @@
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
-<<<<<<< Updated upstream
 import { htmlTemplateChangePassword, htmlTemplateEmail } from "@quanlysanbong/constants/System";
 import { validateToken } from "@quanlysanbong/lib/auth";
 import clientPromise from "@quanlysanbong/lib/mongodb";
@@ -9,17 +8,12 @@ import { encrypt } from "@quanlysanbong/utils/Security";
 =======
 =======
 >>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
 import { htmlTemplateChangePassword, htmlTemplateEmail } from "@muahub/constants/System";
 import { validateToken } from "@muahub/lib/auth";
 import clientPromise from "@muahub/lib/mongodb";
 import { sendEmail } from "@muahub/lib/sendEmail";
 import { encrypt } from "@muahub/utils/Security";
 <<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes

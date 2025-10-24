@@ -28,14 +28,17 @@ export async function GET(req) {
 
     // Build the search query dynamically based on the provided parameters
 <<<<<<< Updated upstream
-<<<<<<< Updated upstream
     // Mặc định chỉ lấy các order đã xác nhận hoàn toàn (confirmed)
 =======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
     const searchQuery = {
+      // status: "confirmed",
+=======
+    const searchQuery = {
       status: "confirmed",
+>>>>>>> Stashed changes
       fieldSlot: { $exists: true }
     };
     if (userId) searchQuery.userId = getObjectId(userId);
@@ -96,10 +99,31 @@ export async function POST(req) {
 
     const objectId = await validateToken(req);
 
+<<<<<<< Updated upstream
+    let { serviceId, ownerId, field, time, date, deposit, fieldSlot, serviceLocationType, serviceLocation } = await req.json();
+
+    // Lấy dữ liệu vị trí từ object serviceLocation
+    const {
+      extraFee = 0,
+      distanceKm = 0,
+      customerLat = null,
+      customerLng = null,
+      studioLat = null,
+      studioLng = null
+    } = serviceLocation || {};
+
+    deposit = parseInt(deposit);
+
+  // Chuyển đổi kiểu dữ liệu nếu cần
+  const parsedExtraFee = extraFee ? parseInt(extraFee) : 0;
+  const parsedDistanceKm = distanceKm ? parseFloat(distanceKm) : 0;
+
+=======
     let { serviceId, ownerId, field, time, date, deposit, fieldSlot } = await req.json();
 
     deposit = parseInt(deposit);
 
+>>>>>>> Stashed changes
     const total = deposit;
 
     deposit = (deposit * 30) / 100;
@@ -107,6 +131,17 @@ export async function POST(req) {
     // làm tròn số tiền cọc
     deposit = Math.ceil(deposit / 1000) * 1000;
 
+<<<<<<< Updated upstream
+    // Check if booking is for today
+    const today = new Date();
+    const bookingDate = new Date(date);
+    today.setHours(0, 0, 0, 0);
+    bookingDate.setHours(0, 0, 0, 0);
+    
+    const isToday = bookingDate.getTime() === today.getTime();
+    
+=======
+>>>>>>> Stashed changes
     let newOrder = {
       userId: objectId,
       serviceId: getObjectId(serviceId),
@@ -116,59 +151,80 @@ export async function POST(req) {
       deposit,
       remaining: total - deposit,
 <<<<<<< Updated upstream
-<<<<<<< Updated upstream
-      status: "pending", // Chờ admin xác nhận cọc
+      status: isToday ? "deposit_confirmed" : "pending", // Tự động xác nhận cọc nếu đặt trong ngày
       fieldSlot,
       date,
+      serviceLocationType: serviceLocationType || null,
+      serviceLocation: {
+        extraFee: parsedExtraFee,
+        distanceKm: parsedDistanceKm,
+        customerLat,
+        customerLng,
+        studioLat,
+        studioLng
+      },
       created_at: new Date(),
       updated_at: new Date()
 =======
-=======
->>>>>>> Stashed changes
       status: "confirmed",
       fieldSlot,
       date,
       created_at: new Date()
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
 >>>>>>> Stashed changes
     };
 
     const dataOrder = await ordersCollection.insertOne(newOrder);
 
 <<<<<<< Updated upstream
-<<<<<<< Updated upstream
     newOrder = { ...newOrder, _id: dataOrder.insertedId };
 
     // Notification logic
     const notificationsCollection = db.collection("notifications");
     const now = new Date();
-    // Notify admin (assuming admin userId = null or a fixed value, e.g. 'admin')
-    await notificationsCollection.insertOne({
-      userId: null, // or 'admin', adjust as needed
-      type: "admin",
-      orderId: newOrder._id,
-      message: `Có đơn đặt dịch vụ mới từ user ${objectId}`,
-      isRead: false,
-      created_at: now,
-      updated_at: now
-    });
+
+    // Lấy thông tin user để lấy email hoặc phone
+    const userInfo = await accountsCollection.findOne({ _id: objectId }, { projection: { email: 1, phone: 1 } });
+    const userIdentifier = userInfo?.email || userInfo?.phone || objectId;
+
+    // Only notify admin for future bookings that need deposit confirmation
+    if (!isToday) {
+      await notificationsCollection.insertOne({
+        userId: null, // or 'admin', adjust as needed
+        type: "admin",
+        orderId: newOrder._id,
+        message: `Có đơn đặt dịch vụ mới từ user ${userIdentifier}`,
+        isRead: false,
+        created_at: now,
+        updated_at: now
+      });
+    }
+
     // Notify owner
     await notificationsCollection.insertOne({
       userId: getObjectId(ownerId),
       type: "owner",
       orderId: newOrder._id,
-      message: `Bạn có đơn đặt dịch vụ mới từ user ${objectId}`,
+      message: `Bạn có đơn đặt dịch vụ mới từ user ${objectId}${isToday ? ' (đã xác nhận cọc tự động)' : ''}`,
       isRead: false,
       created_at: now,
       updated_at: now
     });
+    
+    // If same-day booking, notify user that deposit is automatically confirmed
+    if (isToday) {
+      await notificationsCollection.insertOne({
+        userId: objectId,
+        type: "user",
+        orderId: newOrder._id,
+        message: "Đặt lịch trong ngày đã được tự động xác nhận cọc, vui lòng xác nhận dịch vụ để hoàn tất đặt lịch.",
+        isRead: false,
+        created_at: now,
+        updated_at: now
+      });
+    }
 
     return NextResponse.json({ success: true, message: "Tạo dịch vụ makeup thành công, chờ xác nhận cọc", data: newOrder });
 =======
-=======
->>>>>>> Stashed changes
     const ownerData = await accountsCollection.findOne({
       _id: getObjectId(ownerId)
     });
@@ -185,9 +241,6 @@ export async function POST(req) {
     newOrder = { ...newOrder, _id: dataOrder.insertedId };
 
     return NextResponse.json({ success: true, message: "Tạo dịch vụ makeup thành công", data: newOrder });
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
 >>>>>>> Stashed changes
   } catch (error) {
     return NextResponse.json({ success: false, error: error.message }, { status: 500 });
@@ -209,7 +262,6 @@ export async function PUT(req) {
     await validateToken(req);
 
 <<<<<<< Updated upstream
-<<<<<<< Updated upstream
     const order = await ordersCollection.findOne({ _id: ObjectId });
     if (!order) {
       return NextResponse.json({ success: false, message: "Dịch vụ makeup không tồn tại" }, { status: 404 });
@@ -225,7 +277,7 @@ export async function PUT(req) {
         userId: order.userId,
         type: "user",
         orderId: order._id,
-        message: "Admin đã xác nhận cọc, vui lòng xác nhận dịch vụ để hoàn tất đặt lịch.",
+        message: "Admin đã xác nhận cọc, vui lòng kiểm tra lịch sử đặt lịch.",
         isRead: false,
         created_at: new Date(),
         updated_at: new Date()
@@ -254,8 +306,6 @@ export async function PUT(req) {
       await notificationsCollection.insertOne(notificationForUser);
     }
 =======
-=======
->>>>>>> Stashed changes
     const service = await ordersCollection.findOne({ _id: ObjectId });
     if (!service) {
       return NextResponse.json({ success: false, message: "Dịch vụ makeup không tồn tại" }, { status: 404 });
@@ -275,9 +325,6 @@ export async function PUT(req) {
         }
       }
     );
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
 >>>>>>> Stashed changes
 
     await ordersCollection.updateOne(
