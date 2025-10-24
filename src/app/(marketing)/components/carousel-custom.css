@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 /* Làm mờ nút prev của Swiper */
 .swiper-button-prev {
   opacity: 0.4;
@@ -8,4 +9,16 @@
 .swiper-button-prev:hover {
   opacity: 1;
   filter: none;
+=======
+/* Làm mờ nút prev của Swiper */
+.swiper-button-prev {
+  opacity: 0.4;
+  filter: blur(1px);
+  transition: opacity 0.2s, filter 0.2s;
+}
+
+.swiper-button-prev:hover {
+  opacity: 1;
+  filter: none;
+>>>>>>> Stashed changes
 }

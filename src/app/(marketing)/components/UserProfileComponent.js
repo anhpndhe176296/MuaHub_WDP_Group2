@@ -1,6 +1,7 @@
 "use client";
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 import { useState } from "react";
 import { Tab, Tabs, Form, Button } from "react-bootstrap";
 import { useApp } from "@quanlysanbong/app/contexts/AppContext";
@@ -13,6 +14,16 @@ import UpdateProfileComponent from "./UpdateProfileComponent";
 import toast from "react-hot-toast";
 import SendRequest from "@quanlysanbong/utils/SendRequest";
 import { ROLE_MANAGER } from "@quanlysanbong/constants/System";
+=======
+import { useState } from "react";
+import { Tab, Tabs, Form, Button } from "react-bootstrap";
+import { useApp } from "@muahub/app/contexts/AppContext";
+import UpdateProfileComponent from "./UpdateProfileComponent";
+import UpdateMakeupArtistProfileComponent from "./UpdateMakeupArtistProfileComponent";
+import toast from "react-hot-toast";
+import SendRequest from "@muahub/utils/SendRequest";
+import { ROLE_MANAGER } from "@muahub/constants/System";
+>>>>>>> Stashed changes
 import HistoryBookingComponent from "./HistoryBookingComponent";
 import { Alert, AlertTitle, Stack } from "@mui/material";
 import UpgradeIcon from "@mui/icons-material/Upgrade";
@@ -23,6 +34,7 @@ import HistoryBankComponent from "./HistoryBankComponent";
 const UserProfileComponent = () => {
   const { currentUser, updateUser } = useApp();
   const [key, setKey] = useState("account");
+<<<<<<< Updated upstream
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
   const [upgradeProfileData, setUpgradeProfileData] = useState(null); // optional, for collecting profile data
   const [isPending, setIsPending] = useState(false);
@@ -39,6 +51,8 @@ const UserProfileComponent = () => {
         });
     }
   }, [key, currentUser]);
+=======
+>>>>>>> Stashed changes
 
   const [passwordData, setPasswordData] = useState({
     currentPassword: "",
@@ -74,6 +88,7 @@ const UserProfileComponent = () => {
     });
   };
 
+<<<<<<< Updated upstream
 
   // Khi nhấn nút gửi yêu cầu nâng cấp, mở modal
   const handleUpgradeRequest = () => {
@@ -85,22 +100,40 @@ const UserProfileComponent = () => {
     try {
       // Kiểm tra xem đã có yêu cầu pending chưa
       const checkRes = await fetch(`/api/request-add-MUA?email=${currentUser.email}`);
+=======
+  const handleUpgradeRequest = async () => {
+    try {
+      // Kiểm tra xem đã có yêu cầu pending chưa
+      const checkRes = await fetch(`/api/request-add-sale?email=${currentUser.email}`);
+>>>>>>> Stashed changes
       const checkData = await checkRes.json();
       const isPending = checkData.data?.some((item) => item.email === currentUser.email && item.status === "pending");
       if (isPending) {
         toast("Bạn đã gửi yêu cầu nâng cấp trước đó. Vui lòng chờ xác nhận từ quản trị viên.");
+<<<<<<< Updated upstream
         setShowUpgradeModal(false);
         return;
       }
 
       // Gửi thông tin hồ sơ + yêu cầu nâng cấp
       const res = await fetch("/api/request-add-MUA", {
+=======
+        return;
+      }
+
+      // Nếu chưa có thì gửi yêu cầu mới
+      const res = await fetch("/api/request-add-sale", {
+>>>>>>> Stashed changes
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           userId: currentUser._id,
+<<<<<<< Updated upstream
           email: currentUser.email,
           profile: profileData // gửi kèm thông tin hồ sơ
+=======
+          email: currentUser.email
+>>>>>>> Stashed changes
         })
       });
       const data = await res.json();
@@ -109,7 +142,10 @@ const UserProfileComponent = () => {
     } catch {
       toast.error("Gửi yêu cầu thất bại!");
     }
+<<<<<<< Updated upstream
     setShowUpgradeModal(false);
+=======
+>>>>>>> Stashed changes
   };
 
   return (
@@ -118,6 +154,16 @@ const UserProfileComponent = () => {
         <Tab eventKey="account" title="Cập nhật tài khoản">
           <UpdateProfileComponent currentUser={currentUser} updateUser={updateUser} />
         </Tab>
+<<<<<<< Updated upstream
+=======
+              
+        {/* Tab cập nhật hồ sơ chuyên gia cho MUA */}
+        {currentUser.role === "makeup_artist" && (
+          <Tab eventKey="mua-profile" title="Cập nhật hồ sơ chuyên gia">
+            <UpdateMakeupArtistProfileComponent currentUser={currentUser} />
+          </Tab>
+        )}
+>>>>>>> Stashed changes
 
         <Tab eventKey="password" title="Cập nhật mật khẩu">
           <Form onSubmit={handlePasswordUpdate}>
@@ -159,6 +205,7 @@ const UserProfileComponent = () => {
           <Tab eventKey="upgrade" title="Yêu cầu nâng cấp">
             <div className="mt-3">
               {currentUser.active ? (
+<<<<<<< Updated upstream
                 isPending ? (
                   <Alert severity="info" className="mb-3">
                     <AlertTitle>
@@ -184,12 +231,31 @@ const UserProfileComponent = () => {
                     </div>
                   </Alert>
                 )
+=======
+                <Alert severity="info" className="mb-3">
+                  <AlertTitle>
+                    <UpgradeIcon fontSize="small" /> Yêu cầu nâng cấp thành Chủ dịch vụ
+                  </AlertTitle>
+                  <p>Nếu bạn muốn trở thành quản lý/chủ dịch vụ trên hệ thống, vui lòng gửi yêu cầu xác nhận.</p>
+                  <div className="d-flex justify-content-end">
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      startIcon={<UpgradeIcon />}
+                      onClick={handleUpgradeRequest}
+                    >
+                      Gửi yêu cầu nâng cấp
+                    </Button>
+                  </div>
+                </Alert>
+>>>>>>> Stashed changes
               ) : (
                 <Alert severity="warning">
                   <AlertTitle>
                     <EmailIcon fontSize="small" /> Tài khoản chưa xác thực
                   </AlertTitle>
                   <p>
+<<<<<<< Updated upstream
                     Bạn cần xác minh tài khoản để gửi yêu cầu nâng cấp. Vui lòng kiểm tra email xác nhận và làm theo hướng dẫn.
                   </p>
                 </Alert>
@@ -207,6 +273,13 @@ const UserProfileComponent = () => {
                   />
                 </Modal.Body>
               </Modal>
+=======
+                    Bạn cần xác minh tài khoản để gửi yêu cầu nâng cấp. Vui lòng kiểm tra email xác nhận và làm theo
+                    hướng dẫn.
+                  </p>
+                </Alert>
+              )}
+>>>>>>> Stashed changes
             </div>
           </Tab>
         )}

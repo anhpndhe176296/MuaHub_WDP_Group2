@@ -15,9 +15,12 @@ const OrderServiceModal = ({ open, onClose, serviceData }) => {
     [orderDone, setOrderDone] = useState(false);
 
   const [qrCode, setQrCode] = useState("");
+<<<<<<< Updated upstream
   const [payosQr, setPayosQr] = useState("");
   const [payosInfo, setPayosInfo] = useState(null); // lưu toàn bộ object trả về từ PayOS
   const [paymentMethod, setPaymentMethod] = useState("vietqr"); // 'vietqr' | 'payos'
+=======
+>>>>>>> Stashed changes
   const [dataOrder, setDataOrder] = useState([]);
 
   const [selectedFieldSlot, setSelectedFieldSlot] = useState([]); // {time: "7:00-8:00", fieldIndex: 2}
@@ -61,6 +64,7 @@ const OrderServiceModal = ({ open, onClose, serviceData }) => {
     onClose();
   };
 
+<<<<<<< Updated upstream
   // Nhận thêm orderCode nếu là PayOS
   const handleGetQr = async (uuid, amount = 10000, orderCode = null) => {
     const content = `dat coc ${uuid}`;
@@ -110,11 +114,40 @@ const OrderServiceModal = ({ open, onClose, serviceData }) => {
         setQrCode("");
       }
     }
+=======
+  const handleGetQr = async (uuid, amount = 10000) => {
+    const content = `dat coc ${uuid}`;
+
+    const payload = {
+      accountNo: ACCOUNT_NO,
+      accountName: `${WEB_NAME} Thanh toán`,
+      acqId: ACQ_ID,
+      amount: amount,
+      addInfo: content,
+      format: "text",
+      template: "compact2"
+    };
+
+    const res = await fetch("https://api.vietqr.io/v2/generate", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(payload)
+    });
+
+    const data = await res.json();
+    setQrCode(data?.data?.qrDataURL || "");
+>>>>>>> Stashed changes
   };
 
   const today = new Date();
   const dateOptions = [];
+<<<<<<< Updated upstream
   for (let i = 0; i < 30; i++) { // Cho phép chọn 30 ngày tới
+=======
+  for (let i = 0; i < 5; i++) {
+>>>>>>> Stashed changes
     const futureDate = new Date(today.getTime() + i * 24 * 60 * 60 * 1000);
     dateOptions.push(
       `${futureDate.getFullYear()}-${(futureDate.getMonth() + 1).toString().padStart(2, "0")}-${futureDate
@@ -158,6 +191,7 @@ const OrderServiceModal = ({ open, onClose, serviceData }) => {
       payloadArr.push(payload);
     });
 
+<<<<<<< Updated upstream
     let uuid = uuidv4();
     uuid = uuid.replace(/-/g, "");
 
@@ -168,12 +202,19 @@ const OrderServiceModal = ({ open, onClose, serviceData }) => {
     } else {
       await handleGetQr(uuid, orderCost);
     }
+=======
+    let uuid = uuidv4(); // Tạo UUID cho đơn hàng
+    uuid = uuid.replace(/-/g, ""); // Loại bỏ dấu gạch ngang để sử dụng trong nội dung
+
+    await handleGetQr(uuid, orderCost);
+>>>>>>> Stashed changes
 
     setTimeout(() => {
       const intervalId = setInterval(async () => {
         const resPayment = await SendRequest("get", `/api/webhooks`);
         let paymentDone = false;
         if (resPayment.payload) {
+<<<<<<< Updated upstream
           // console.log('resPayment.payload:', resPayment.payload);
           resPayment.payload.forEach((item) => {
             // console.log("paymentMethod:", paymentMethod);
@@ -191,10 +232,16 @@ const OrderServiceModal = ({ open, onClose, serviceData }) => {
                   paymentDone = true;
                 }
               }
+=======
+          resPayment.payload.forEach((item) => {
+            if (item.content.includes(`dat coc ${uuid}`)) {
+              paymentDone = true;
+>>>>>>> Stashed changes
             }
           });
         }
         if (!paymentDone) return;
+<<<<<<< Updated upstream
         payloadArr.forEach(async (payload) => {
           await SendRequest("post", "/api/orders", payload);
         });
@@ -202,6 +249,21 @@ const OrderServiceModal = ({ open, onClose, serviceData }) => {
         clearInterval(intervalId);
       }, 5000);
     }, 5000);
+=======
+        // Cập nhật trạng thái đơn hàng thành confirmed ngay lập tức
+        payloadArr.forEach(async (payload) => {
+          await SendRequest("post", "/api/orders", payload);
+        });
+        // Cập nhật state với trạng thái đã xác nhận
+        setOrderDone(true);
+        clearInterval(intervalId); // Stop polling when success
+      }, 1500);
+    }, 5000); // Simulate loading
+
+    // setSelectedDate("");
+    // setSelectedField("");
+    // setSelectedFieldSlot([]);
+>>>>>>> Stashed changes
   };
 
   const toggleSelectedFieldSlot = ({ time, fieldIndex }) => {
@@ -224,7 +286,11 @@ const OrderServiceModal = ({ open, onClose, serviceData }) => {
         <Modal.Title>Đặt lịch trang điểm cho {serviceData.serviceName}</Modal.Title>
       </Modal.Header>
       <Modal.Body>
+<<<<<<< Updated upstream
         {(qrCode.length || payosQr.length) ? (
+=======
+        {qrCode.length ? (
+>>>>>>> Stashed changes
           <div className="card shadow-sm p-4 border-0">
             <h5 className="mb-3">
               <strong>Thông tin đặt lịch</strong>
@@ -275,6 +341,7 @@ const OrderServiceModal = ({ open, onClose, serviceData }) => {
             ) : (
               <div>
                 <h6 className="mb-2">
+<<<<<<< Updated upstream
                   <strong>Phương thức thanh toán:</strong> {paymentMethod === "vietqr" ? "Chuyển khoản ngân hàng (VietQR)" : "Thanh toán PayOS"}
                 </h6>
                 <div className="d-flex justify-content-center mt-3">
@@ -296,12 +363,28 @@ const OrderServiceModal = ({ open, onClose, serviceData }) => {
                   )}
                   {/* Nếu muốn hiển thị raw QR text: <div>{payosQr}</div> */}
                   {(!qrCode.length && !payosQr.length) && <Spinner animation="border" variant="primary" />}
+=======
+                  <strong>Chuyển khoản qua ngân hàng:</strong>
+                </h6>
+                <div className="d-flex justify-content-center mt-3">
+                  {qrCode.length > 0 ? (
+                    <img
+                      src={qrCode}
+                      alt="Mã QR chuyển khoản"
+                      className="img-fluid rounded border"
+                      style={{ maxWidth: 250 }}
+                    />
+                  ) : (
+                    <Spinner animation="border" variant="primary" />
+                  )}
+>>>>>>> Stashed changes
                 </div>
               </div>
             )}
           </div>
         ) : (
           <Form>
+<<<<<<< Updated upstream
             <Form.Group className="mb-3">
               <Form.Label>Chọn phương thức thanh toán</Form.Label>
               <div className="d-flex gap-2">
@@ -353,6 +436,54 @@ const OrderServiceModal = ({ open, onClose, serviceData }) => {
                   </Button>
                 ))}
               </div>
+=======
+            <p className="mb-2">Chọn ngày đặt lịch</p>
+            <Form.Group className="mb-3" style={{ display: "flex", flexWrap: "wrap", justifyContent: "space-between" }}>
+              {dateOptions.map((date, index) => (
+                <Button
+                  key={index}
+                  variant={selectedDate === date ? "primary" : "light"}
+                  size="sm"
+                  onClick={() => setSelectedDate(date)}
+                  className="mb-2"
+                  style={{
+                    flex: "1 0 18%",
+                    margin: "2px",
+                    textAlign: "center"
+                  }}
+                >
+                  <div>
+                    <div className="text-muted" style={{ fontSize: "0.8rem" }}>
+                      <p
+                        style={{
+                          color: selectedDate === date ? "#fff" : "#adafb3"
+                        }}
+                      >
+                        {new Date(date).toLocaleString("default", { month: "short" })}{" "}
+                      </p>
+                      <p
+                        style={{
+                          fontSize: "1.2rem",
+                          fontWeight: "bold",
+
+                          color: selectedDate === date ? "#fff" : "#000"
+                        }}
+                      >
+                        {new Date(date).getDate()}
+                      </p>
+                      <p
+                        style={{
+                          fontSize: "0.8rem",
+                          color: selectedDate === date ? "#fff" : "#adafb3"
+                        }}
+                      >
+                        {new Date(date).toLocaleString("default", { weekday: "short" })}
+                      </p>
+                    </div>
+                  </div>
+                </Button>
+              ))}
+>>>>>>> Stashed changes
             </Form.Group>
 
             <Form.Group className="mb-3">
@@ -417,10 +548,17 @@ const OrderServiceModal = ({ open, onClose, serviceData }) => {
                         const [startTime] = time.split("-");
                         if (
                           selectedDate ===
+<<<<<<< Updated upstream
                           `${today.getFullYear()}-${(today.getMonth() + 1).toString().padStart(2, "0")}-${today
                             .getDate()
                             .toString()
                             .padStart(2, "0")}` &&
+=======
+                            `${today.getFullYear()}-${(today.getMonth() + 1).toString().padStart(2, "0")}-${today
+                              .getDate()
+                              .toString()
+                              .padStart(2, "0")}` &&
+>>>>>>> Stashed changes
                           (() => {
                             // Lấy giờ phút hiện tại
                             const now = new Date();
@@ -491,9 +629,15 @@ const OrderServiceModal = ({ open, onClose, serviceData }) => {
                       <strong>Đã chọn:</strong>
                       <ul>
                         {selectedFieldSlot.map((slot, index) => (
+<<<<<<< Updated upstream
                           <li key={index}>
                             {slot.time} - Slot {slot.fieldIndex + 1}
                           </li>
+=======
+                              <li key={index}>
+                                {slot.time} - Slot {slot.fieldIndex + 1}
+                              </li>
+>>>>>>> Stashed changes
                         ))}
                       </ul>
                     </div>
@@ -511,6 +655,7 @@ const OrderServiceModal = ({ open, onClose, serviceData }) => {
         )}
       </Modal.Body>
       <Modal.Footer>
+<<<<<<< Updated upstream
         {/* Hiển thị thông tin PayOS nếu có */}
         {/* {paymentMethod === "payos" && payosInfo && (
               <div className="alert alert-info mt-3">
@@ -522,6 +667,8 @@ const OrderServiceModal = ({ open, onClose, serviceData }) => {
                 <div><b>Link thanh toán:</b> <a href={payosInfo.checkoutUrl} target="_blank" rel="noopener noreferrer">{payosInfo.checkoutUrl}</a></div>
               </div>
             )} */}
+=======
+>>>>>>> Stashed changes
         {orderDone ? (
           <>
             <Link href="/trang-ca-nhan">
