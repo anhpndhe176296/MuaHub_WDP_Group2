@@ -276,13 +276,21 @@ const HistoryBankComponent = () => {
     <div className="w-100 overflow-auto">
       <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
         <Typography variant="h4">Lịch sử rút tiền</Typography>
+<<<<<<< Updated upstream
         {currentUser.role === ROLE_MANAGER.MUA && (
+=======
+        {currentUser.role === ROLE_MANAGER.SALE && (
+>>>>>>> Stashed changes
           <Button variant="primary" color="primary" onClick={() => setOpenModal(true)}>
             Rút tiền
           </Button>
         )}
       </Box>
+<<<<<<< Updated upstream
       {currentUser.role === ROLE_MANAGER.MUA && (
+=======
+      {currentUser.role === ROLE_MANAGER.SALE && (
+>>>>>>> Stashed changes
         <Box display="flex" justifyContent="space-between" mb={3}>
           <Typography variant="h6">Tổng số tiền: {formatCurrency(currentUser.totalPrice || 0)}</Typography>
           <Typography variant="h6">
