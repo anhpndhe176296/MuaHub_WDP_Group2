@@ -10,12 +10,31 @@ export async function PATCH(req) {
 		const usersCollection = dbAccounts.collection("users");
 		const ordersCollection = dbServices.collection("orders");
 
-		
-		
+		// Tìm admin
+		const admin = await usersCollection.findOne({ role: "admin" });
+		if (!admin) {
+			return NextResponse.json({ success: false, message: "Không tìm thấy tài khoản admin" }, { status: 404 });
+		}
 
-		
+		// Tổng hợp lại tổng tiền và còn lại từ tất cả các đơn hàng (orders)
+		// Có thể cần điều chỉnh điều kiện filter cho phù hợp với logic thực tế
+		const agg = await ordersCollection.aggregate([
+			{
+				$group: {
+					_id: null,
+					totalPrice: { $sum: "$deposit" },
+					remaining: { $sum: "$remaining" }
+				}
+			}
+		]).toArray();
 
-		
+		const totalPrice = agg[0]?.totalPrice || 0;
+		const remaining = agg[0]?.remaining || 0;
+
+		await usersCollection.updateOne(
+			{ _id: admin._id },
+			{ $set: { totalPrice, remaining } }
+		);
 
 			return NextResponse.json({
 				success: true,
