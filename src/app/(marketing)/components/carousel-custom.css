@@ -1,5 +1,4 @@
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
+
 /* Làm mờ nút prev của Swiper */
 .swiper-button-prev {
   opacity: 0.4;
@@ -10,9 +9,7 @@
 .swiper-button-prev:hover {
   opacity: 1;
   filter: none;
-=======
-=======
->>>>>>> Stashed changes
+
 /* Làm mờ nút prev của Swiper */
 .swiper-button-prev {
   opacity: 0.4;
@@ -23,8 +20,6 @@
 .swiper-button-prev:hover {
   opacity: 1;
   filter: none;
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
+
+}
 }
