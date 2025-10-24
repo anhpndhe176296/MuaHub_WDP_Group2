@@ -29,6 +29,10 @@ export async function GET(req) {
     // Build the search query dynamically based on the provided parameters
 <<<<<<< Updated upstream
     // Mặc định chỉ lấy các order đã xác nhận hoàn toàn (confirmed)
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
     const searchQuery = {
       // status: "confirmed",
 =======

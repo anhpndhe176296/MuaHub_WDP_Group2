@@ -20,9 +20,15 @@ const OrderServiceModal = ({ open, onClose, serviceData }) => {
   const [longitude, setLongitude] = useState(108.2022);
 
   const [qrCode, setQrCode] = useState("");
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
   const [payosQr, setPayosQr] = useState("");
   const [payosInfo, setPayosInfo] = useState(null); // lưu toàn bộ object trả về từ PayOS
   const [paymentMethod, setPaymentMethod] = useState("vietqr"); // 'vietqr' | 'payos'
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
   const [dataOrder, setDataOrder] = useState([]);
 
   const [selectedFieldSlot, setSelectedFieldSlot] = useState([]); // {time: "7:00-8:00", fieldIndex: 2}
