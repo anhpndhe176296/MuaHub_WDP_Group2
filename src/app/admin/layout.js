@@ -21,10 +21,10 @@ const AdminLayout = ({ children }) => {
     return;
   }
 
-  const url = ["/makeup-artists/dang-nhap", "/makeup-artists/dang-ky"];
+  const url = ["/admin/dang-nhap", "/admin/dang-ky"];
 
   if (!loading && Object.keys(currentUser).length === 0 && !url.includes(pathUrl)) {
-    router.push("/makeup-artists/dang-nhap");
+    router.push("/admin/dang-nhap");
     return;
   }
 
@@ -36,7 +36,7 @@ const AdminLayout = ({ children }) => {
         <div className="loading position-fixed" id="loading-full-screen">
           <LoadingFullScreen />
         </div>
-      ) : pathUrl === "/makeup-artists/dang-nhap" || pathUrl === "/makeup-artists/dang-ky" ? (
+      ) : pathUrl === "/admin/dang-nhap" || pathUrl === "/admin/dang-ky" ? (
         <>{children}</>
       ) : (
         <RootAdminLayout>{children}</RootAdminLayout>

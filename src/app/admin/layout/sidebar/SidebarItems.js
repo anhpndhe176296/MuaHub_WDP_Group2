@@ -1,8 +1,4 @@
-<<<<<<< Updated upstream
-import React from "react";
-=======
 import React, { useEffect } from "react";
->>>>>>> Stashed changes
 import Menuitems from "./MenuItems";
 import { usePathname } from "next/navigation";
 import { Box, List } from "@mui/material";
@@ -10,42 +6,27 @@ import NavItem from "./NavItem";
 import NavGroup from "./NavGroup/NavGroup";
 import { useApp } from "@muahub/app/contexts/AppContext";
 import { ROLE_MANAGER } from "@muahub/constants/System";
-<<<<<<< Updated upstream
-
-=======
-import { useRouter } from "next/navigation";
->>>>>>> Stashed changes
+  import { useRouter } from "next/navigation";
 const SidebarItems = ({ toggleMobileSidebar }) => {
   const { currentUser } = useApp();
   const pathname = usePathname();
   const pathDirect = pathname;
-<<<<<<< Updated upstream
-
-  if (currentUser.role === ROLE_MANAGER.SALE && !currentUser.payment_type) {
-    if (pathname !== "/makeup-artists/thanh-toan-nen-tang") {
-      if (typeof window !== "undefined") {
-        window.location.href = "/makeup-artists/thanh-toan-nen-tang";
-      }
-      return null;
-    }
-=======
   const router = useRouter();
   useEffect(() => {
     if (
       currentUser.role === ROLE_MANAGER.MUA &&
       !currentUser.payment_type &&
-      pathname !== "/makeup-artists/thanh-toan-nen-tang"
+      pathname !== "/admin/thanh-toan-nen-tang"
     ) {
-      router.push("/makeup-artists/thanh-toan-nen-tang");
+      router.push("/admin/thanh-toan-nen-tang");
     }
   }, [currentUser, pathname, router]);
 
   if (
     currentUser.role === ROLE_MANAGER.MUA &&
     !currentUser.payment_type &&
-    pathname === "/makeup-artists/thanh-toan-nen-tang"
+    pathname === "/admin/thanh-toan-nen-tang"
   ) {
->>>>>>> Stashed changes
     return (
       <Box sx={{ px: 3 }}>
         <div style={{ padding: "16px", textAlign: "center", color: "#888" }}>
@@ -63,11 +44,7 @@ const SidebarItems = ({ toggleMobileSidebar }) => {
           if (item.onlyUser && currentUser.role === ROLE_MANAGER.ADMIN) {
             return null;
           }
-<<<<<<< Updated upstream
-          if (item.onlyAdmin && currentUser.role === ROLE_MANAGER.SALE) {
-=======
           if (item.onlyAdmin && currentUser.role === ROLE_MANAGER.MUA) {
->>>>>>> Stashed changes
             return null;
           }
           if (item.subheader) {
