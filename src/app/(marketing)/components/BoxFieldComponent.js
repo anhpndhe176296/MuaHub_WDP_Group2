@@ -1,16 +1,12 @@
 "use client";
 
-<<<<<<< Updated upstream
 
 import { useEffect, useState } from "react";
-=======
->>>>>>> Stashed changes
 import { formatCurrency } from "@muahub/utils/Main";
 import Link from "next/link";
 import "@muahub/styles/makeup-artist-enhancements.css";
 
 const BoxFieldComponent = ({ field, showDistance = false, distance, showBookingCount = false, bookingCount = 0 }) => {
-<<<<<<< Updated upstream
   // Yêu thích: lưu trong localStorage theo id dịch vụ
   const [isFavorite, setIsFavorite] = useState(false);
 
@@ -35,10 +31,8 @@ const BoxFieldComponent = ({ field, showDistance = false, distance, showBookingC
     }
     localStorage.setItem("favoriteServices", JSON.stringify(favs));
   };
-=======
->>>>>>> Stashed changes
-  // Xử lý tên artist - ưu tiên artistName, sau đó serviceName
-  const displayName = field.artistName || field.serviceName;
+  // Xử lý tên artist - ưu tiên serviceName, sau đó serviceName
+  const displayName = field.serviceName || field.serviceName;
   
   // Xử lý kinh nghiệm - tính từ experienceYears hoặc experienceMonths
   const getExperience = () => {
@@ -67,8 +61,8 @@ const BoxFieldComponent = ({ field, showDistance = false, distance, showBookingC
     if (imageUrl) {
       return (
         <img
-          // src={imageUrl}
-             src={"/img/ab0.jpg"}
+          src={imageUrl}
+            //  src={"/img/ab0.jpg"}
           alt={displayName}
           className="card-img-top img-fluid"
           style={{ height: "250px", objectFit: "cover" }}
@@ -112,7 +106,6 @@ const BoxFieldComponent = ({ field, showDistance = false, distance, showBookingC
           >
             <i className="fas fa-palette"></i>
           </div>
-<<<<<<< Updated upstream
           {/* Icon trái tim yêu thích */}
           <button
             className="favorite-btn position-absolute top-0 start-0 m-2 btn btn-link p-0"
@@ -122,8 +115,6 @@ const BoxFieldComponent = ({ field, showDistance = false, distance, showBookingC
           >
             <i className={isFavorite ? "fas fa-heart" : "far fa-heart"}></i>
           </button>
-=======
->>>>>>> Stashed changes
           <div className="position-absolute top-0 end-0 p-2">
             <span className="badge bg-primary">
               <i className="fas fa-star me-1"></i>
@@ -132,7 +123,7 @@ const BoxFieldComponent = ({ field, showDistance = false, distance, showBookingC
           </div>
         </div>
         <div className="card-body d-flex flex-column">
-          <Link href={`/makeup-artists/${field._id}`} className="text-decoration-none">
+          <Link href={`/make-up/${field._id}`} className="text-decoration-none">
             <h5 className="card-title" style={{ color: "#ff5c95ff", fontWeight: "600" }}>
               {displayName}
             </h5>
