@@ -313,7 +313,66 @@ const CreateServicePage = () => {
             </Grid>
           </Grid>
 
-         
+          {/* Thêm phần tọa độ */}
+          <Grid item xs={12}>
+            <Typography variant="h6" sx={{ mb: 2 }}>
+              Tọa độ vị trí
+            </Typography>
+            <Grid container spacing={2}>
+              <Grid item xs={5}>
+                <TextField
+                  label="Vĩ độ (Latitude)"
+                  fullWidth
+                  variant="outlined"
+                  type="number"
+                  inputProps={{ step: "any" }}
+                  value={latitude}
+                  onChange={(e) => setLatitude(e.target.value)}
+                  placeholder="Ví dụ: 10.8231"
+                />
+              </Grid>
+              <Grid item xs={5}>
+                <TextField
+                  label="Kinh độ (Longitude)"
+                  fullWidth
+                  variant="outlined"
+                  type="number"
+                  inputProps={{ step: "any" }}
+                  value={longitude}
+                  onChange={(e) => setLongitude(e.target.value)}
+                  placeholder="Ví dụ: 106.6297"
+                />
+              </Grid>
+              <Grid item xs={2}>
+                <Button variant="outlined" fullWidth sx={{ height: "56px" }} onClick={getCurrentLocation}>
+                  Lấy vị trí hiện tại
+                </Button>
+              </Grid>
+            </Grid>
+          </Grid>
+
+          {/* Thêm phần tiện ích */}
+          <Grid item xs={12}>
+            <Typography variant="h6" sx={{ mb: 2 }}>
+              Tiện ích dịch vụ
+            </Typography>
+            <Autocomplete
+              multiple
+              options={availableAmenities}
+              value={amenities}
+              onChange={(event, newValue) => {
+                setAmenities(newValue);
+              }}
+              renderTags={(tagValue, getTagProps) =>
+                tagValue.map((option, index) => <Chip label={option} {...getTagProps({ index })} key={option} />)
+              }
+              renderInput={(params) => (
+                <TextField {...params} variant="outlined" placeholder="Chọn hoặc thêm tiện ích" />
+              )}
+              freeSolo
+            />
+          </Grid>
+
           <Grid item xs={12}>
             <TextField
               label="Mô tả dịch vụ"
