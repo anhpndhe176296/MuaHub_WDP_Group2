@@ -1,19 +1,29 @@
 import React, { useState } from "react";
-import { Box, Typography, FormGroup, FormControlLabel, Stack, Checkbox, CircularProgress } from "@mui/material";
-import Link from "next/link";
+import { Box, Typography, FormGroup, FormControlLabel, Button, Stack, Checkbox, CircularProgress } from "@mui/material";
+import { useRouter } from "next/navigation";
 import CustomTextField from "@muahub/app/admin/components/forms/theme-elements/CustomTextField";
 import SendRequest from "@muahub/utils/SendRequest";
 import toast from "react-hot-toast";
+import SearchAddressComponent from "../../components/SearchAddressComponent";
+import { ROLE_MANAGER } from "@muahub/constants/System";
 import Button from '@mui/material/Button';
-import { useRouter } from "next/navigation";
-const AuthLogin = ({ title, subtitle, subtext }) => {
+const AuthRegister = ({ title, subtitle, subtext }) => {
   const [account, setAccount] = useState({
+    name: "",
     email: "",
-    password: ""
+    password: "",
+    location: ""
   });
-  const [loading, setLoading] = useState(false);
   const router = useRouter();
+  const [location, setLocation] = useState("");
+
+  const [loading, setLoading] = useState(false);
+
   const validate = () => {
+    if (!account.name) {
+      toast.error("Vui lòng nhập tên.");
+      return false;
+    }
     if (!account.email) {
       toast.error("Vui lòng nhập email.");
       return false;
@@ -37,13 +47,12 @@ const AuthLogin = ({ title, subtitle, subtext }) => {
 
     setLoading(true);
     try {
-      const res = await SendRequest("POST", "/api/users/login", account);
+      const res = await SendRequest("POST", "/api/users", { ...account, address: location, role: ROLE_MANAGER.ADMIN });
       if (res.payload) {
-        toast.success("Đăng nhập thành công");
-        localStorage.setItem("token", res.payload.token);
-        router.push("/admin");
+        toast.success("Đăng ký thành công");
+        router.push("/admin/dang-nhap");
       } else {
-        toast.error("Đăng nhập thất bại, vui lòng kiểm tra thông tin của bạn.");
+        toast.error("Đăng ký thất bại, vui lòng kiểm tra thông tin của bạn.");
       }
     } catch (error) {
       toast.error("Có lỗi xảy ra, vui lòng thử lại.");
@@ -64,7 +73,18 @@ const AuthLogin = ({ title, subtitle, subtext }) => {
 
       <Stack>
         <Box>
-          <Typography variant="subtitle1" fontWeight={600} component="label" htmlFor="Email" mb="5px">
+          <Typography variant="subtitle1" fontWeight={600} component="label" htmlFor="name" mb="5px">
+            Họ và tên
+          </Typography>
+          <CustomTextField
+            variant="outlined"
+            fullWidth
+            value={account.name}
+            onChange={(e) => setAccount({ ...account, name: e.target.value })}
+          />
+        </Box>
+        <Box mt="25px">
+          <Typography variant="subtitle1" fontWeight={600} component="label" htmlFor="email" mb="5px">
             Email
           </Typography>
           <CustomTextField
@@ -86,24 +106,20 @@ const AuthLogin = ({ title, subtitle, subtext }) => {
             onChange={(e) => setAccount({ ...account, password: e.target.value })}
           />
         </Box>
-        <Stack justifyContent="space-between" direction="row" alignItems="center" my={2}>
-          <FormGroup>
-            <FormControlLabel control={<Checkbox defaultChecked />} label="Nhớ thiết bị" />
-          </FormGroup>
-          <Typography
-            component={Link}
-            href="#"
-            fontWeight="500"
-            sx={{
-              textDecoration: "none",
-              color: "primary.main"
-            }}
-          >
-            Quên mật khẩu ?
+        <Box mt="25px">
+          <Typography variant="subtitle1" fontWeight={600} component="label" htmlFor="location" mb="5px">
+            Nơi ở hiện tại (không bắt buộc)
           </Typography>
-        </Stack>
+          {/* <CustomTextField
+            variant="outlined"
+            fullWidth
+            value={account.location}
+            onChange={(e) => setAccount({ ...account, location: e.target.value })}
+          /> */}
+          <SearchAddressComponent className={""} onSearch={setLocation} oldSearch="Hà Nội" />
+        </Box>
       </Stack>
-      <Box>
+      <Box mt={3}>
         <Button
           color="primary"
           variant="contained"
@@ -113,7 +129,7 @@ const AuthLogin = ({ title, subtitle, subtext }) => {
           disabled={loading}
           startIcon={loading && <CircularProgress size={20} color="inherit" />}
         >
-          {loading ? "Đang đăng nhập..." : "Đăng nhập"}
+          {loading ? "Đang đăng ký..." : "Đăng ký"}
         </Button>
       </Box>
       {subtitle}
@@ -121,4 +137,4 @@ const AuthLogin = ({ title, subtitle, subtext }) => {
   );
 };
 
-export default AuthLogin;
+export default AuthRegister;
