@@ -9,10 +9,9 @@ import {
   IconUser,
   IconUsers,
   IconMessage,
-  // thêm icon danh sách chủ sân align-box-left-bottom
+  // thêm icon danh sách chuyên viên align-box-left-bottom
   IconAlignBoxLeftBottom,
   IconMoneybag,
-  IconSettings
 } from "@tabler/icons-react";
 import { uniqueId } from "lodash";
 
@@ -29,7 +28,7 @@ const Menuitems = [
   },
   {
     id: uniqueId(),
-    title: "Chi tiết doanh thu",
+    title: "Doanh thu theo ngày",
     icon: IconChartBar,
     href: "/makeup-artists/doanh-thu"
   },
@@ -57,11 +56,17 @@ const Menuitems = [
     navlabel: true,
     subheader: "Quản lý đặt lịch makeup"
   },
+    {
+    id: uniqueId(),
+    title: "Danh sách đặt lịch",
+    icon: IconListCheck,
+    href: "/makeup-artists/danh-sach-dat-lich"
+  },
   {
     id: uniqueId(),
     title: "Lịch sử đặt lịch",
     icon: IconListCheck,
-    href: "/makeup-artists/danh-sach-dat-lich-makeup"
+    href: "/makeup-artists/lich-su-dat-lich"
   },
   {
     id: uniqueId(),
@@ -83,7 +88,7 @@ const Menuitems = [
   },
   {
     id: uniqueId(),
-    title: "Danh sách chủ sân",
+    title: "Danh sách chuyên viên",
     icon: IconUsers,
     href: "/makeup-artists/danh-sach-makeup-artists",
     onlyAdmin: true
@@ -97,7 +102,7 @@ const Menuitems = [
   },
   {
     id: uniqueId(),
-    title: "Danh sách duyệt chủ sân",
+    title: "Danh sách duyệt chuyên viên",
     icon: IconAlignBoxLeftBottom,
     href: "/makeup-artists/danh-sach-duyet-makeup-artists",
     onlyAdmin: true
@@ -123,21 +128,19 @@ const Menuitems = [
   },
   {
     navlabel: true,
-    subheader: "Quản trị website"
+    subheader: "Quản lý Blog"
   },
   {
     id: uniqueId(),
-    title: "Quản lý banner",
-    icon: IconSettings,
-    href: "/makeup-artists/quan-ly-banner",
-    onlyAdmin: true
+    title: "Danh sách bài viết",
+    icon: IconListCheck,
+    href: "/makeup-artists/danh-sach-blog"
   },
   // {
   //   id: uniqueId(),
-  //   title: "Quản trị website",
-  //   icon: IconSettings,
-  //   href: "/makeup-artists/quan-tri-website",
-  //   onlyAdmin: true
+  //   title: "Thêm bài viết",
+  //   icon: IconPlus,
+  //   href: "/makeup-artists/them-blog"
   // }
 ];
 

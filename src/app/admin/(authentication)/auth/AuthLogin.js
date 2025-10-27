@@ -1,17 +1,18 @@
 import React, { useState } from "react";
-import { Box, Typography, FormGroup, FormControlLabel, Button, Stack, Checkbox, CircularProgress } from "@mui/material";
+import { Box, Typography, FormGroup, FormControlLabel, Stack, Checkbox, CircularProgress } from "@mui/material";
 import Link from "next/link";
 import CustomTextField from "@muahub/app/admin/components/forms/theme-elements/CustomTextField";
 import SendRequest from "@muahub/utils/SendRequest";
 import toast from "react-hot-toast";
-
+import Button from '@mui/material/Button';
+import { useRouter } from "next/navigation";
 const AuthLogin = ({ title, subtitle, subtext }) => {
   const [account, setAccount] = useState({
     email: "",
     password: ""
   });
   const [loading, setLoading] = useState(false);
-
+  const router = useRouter();
   const validate = () => {
     if (!account.email) {
       toast.error("Vui lòng nhập email.");
@@ -40,7 +41,7 @@ const AuthLogin = ({ title, subtitle, subtext }) => {
       if (res.payload) {
         toast.success("Đăng nhập thành công");
         localStorage.setItem("token", res.payload.token);
-        window.location.href = "/admin";
+        router.push("/admin");
       } else {
         toast.error("Đăng nhập thất bại, vui lòng kiểm tra thông tin của bạn.");
       }
