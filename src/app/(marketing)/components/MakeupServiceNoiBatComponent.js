@@ -9,20 +9,15 @@ const itemsPerPage = 12;
 const MakeupServiceNoiBatComponent = () => {
   const [packages, setPackages] = useState([]);
 
-  // Fetch featured packages data from API
+  // Fetch packages data from API
   useEffect(() => {
-    const fetchFeaturedPackages = async () => {
-      const response = await SendRequest("GET", "/api/services/featured");
+    const fetchPackages = async () => {
+      const response = await SendRequest("GET", "/api/services");
       if (response.payload) {
         setPackages(response.payload);
-        console.log("Featured packages:", response.payload);
       }
     };
-    
-    // Chỉ fetch nếu không có dữ liệu được truyền vào
-  
-      fetchFeaturedPackages();
-    
+    fetchPackages();
   }, []);
 
   return (
@@ -34,20 +29,9 @@ const MakeupServiceNoiBatComponent = () => {
         </div>
         {/* Packages List */}
         <div className="row g-3">
-          {packages && packages.length > 0 ? (
-            packages.slice(0, 6).map((field) => (
-              <BoxFieldComponent 
-                key={field._id} 
-                field={field}
-                showDistance={false}
-                showBookingCount={true}
-              />
-            ))
-          ) : (
-            <div className="col-12 text-center">
-              <p>Không có dịch vụ nổi bật nào.</p>
-            </div>
-          )}
+          {packages.slice(0, 6).map((field) => (
+            <BoxFieldComponent key={field._id} field={field} />
+          ))}
         </div>
       </div>
     </div>
