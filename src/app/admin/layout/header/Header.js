@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { Box, AppBar, Toolbar, styled, Stack, IconButton, Badge, Button, Menu, MenuItem, Typography } from "@mui/material";
 import PropTypes from "prop-types";
-// import Link from "next/link";
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 // components
 import Profile from "./Profile";
 import { IconBellRinging, IconMenu } from "@tabler/icons-react";
-
+import { useRouter } from "next/navigation";
 const Header = ({ toggleMobileSidebar }) => {
   // const lgUp = useMediaQuery((theme) => theme.breakpoints.up('lg'));
   // const lgDown = useMediaQuery((theme) => theme.breakpoints.down('lg'));
@@ -30,20 +29,12 @@ const Header = ({ toggleMobileSidebar }) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  // Lấy userId từ localStorage (giả sử đã lưu khi đăng nhập)
   useEffect(() => {
     const fetchNotifications = async () => {
       setLoading(true);
       try {
-        let userId = null;
-        if (typeof window !== 'undefined') {
-          userId = localStorage.getItem('userId');
-        }
         // Lấy tất cả thông báo, không lọc isRead
-        const url = userId
-          ? `/api/notifications/owner?userId=${userId}`
-          : `/api/notifications/owner`;
-        const res = await fetch(url);
+        const res = await fetch(`/api/notifications/admin`);
         const data = await res.json();
         if (data.success) setNotifications(data.data);
       } catch (err) {
@@ -54,7 +45,15 @@ const Header = ({ toggleMobileSidebar }) => {
     };
     fetchNotifications();
   }, []);
-  const router = useRouter();
+
+  const handleOpenMenu = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleCloseMenu = () => {
+    setAnchorEl(null);
+  };
+
+ const router = useRouter();
   // Hàm đánh dấu đã đọc và chuyển trang với orderId
   const handleReadAndGo = async (item) => {
     try {
@@ -66,18 +65,29 @@ const Header = ({ toggleMobileSidebar }) => {
       setNotifications((prev) => prev.map((n) => n._id === item._id ? { ...n, isRead: true } : n));
     } catch (e) {}
     if (item.orderId) {
-      router.push(`/makeup-artists/danh-sach-dat-lich?orderId=${item.orderId}`);
+      router.push(`/admin/danh-sach-dat-lich?orderId=${item.orderId}`);
     } else {
-      router.push('/makeup-artists/danh-sach-dat-lich');
+      router.push('/admin/danh-sach-dat-lich');
     }
     setAnchorEl(null);
   };
 
-  const handleOpenMenu = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-  const handleCloseMenu = () => {
-    setAnchorEl(null);
+  // Hàm giải phóng thông báo quá hạn
+  const handleClearNotifications = async () => {
+    if (!window.confirm('Bạn có chắc chắn muốn xóa tất cả thông báo quá hạn?')) return;
+    try {
+      setLoading(true);
+      const res = await fetch('/api/notifications', { method: 'DELETE' });
+      const data = await res.json();
+      if (data.success) {
+        // Sau khi xóa, reload lại danh sách
+        setNotifications((prev) => prev.filter(n => new Date(n.created_at) >= new Date()));
+        // Hoặc gọi lại fetchNotifications nếu muốn chắc chắn
+        // fetchNotifications();
+      }
+    } catch (e) {} finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -140,7 +150,7 @@ const Header = ({ toggleMobileSidebar }) => {
                   backgroundColor: item.isRead ? '#f5f5f5' : 'inherit',
                   '&:hover': { backgroundColor: item.isRead ? '#f5f5f5' : '#f0f7ff' }
                 }}
-                onClick={() => !item.isRead && handleReadAndGo(item)}
+               onClick={() => !item.isRead && handleReadAndGo(item)}
                 disabled={item.isRead}
               >
                 <Box display="flex" alignItems="center" gap={1}>
@@ -158,7 +168,8 @@ const Header = ({ toggleMobileSidebar }) => {
               </MenuItem>
             ))
           )}
-          <Box sx={{ textAlign: "right", p: 1 }}>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', p: 1 }}>
+            <Button size="small" color="error" onClick={handleClearNotifications}>Giải phóng thông báo</Button>
             <Button size="small" onClick={handleCloseMenu}>Đóng</Button>
           </Box>
         </Menu>
