@@ -17,25 +17,17 @@ export async function GET(req) {
     const searchParams = new URLSearchParams(url.search);
 
     const ownerId = searchParams.get("ownerId");
-<<<<<<< Updated upstream
     const active = searchParams.get("active");
 
     const findQuery = {
       ownerId: ownerId ? getObjectId(ownerId) : { $exists: true }
     };
-    // if (typeof active !== 'undefined') {
-    //   findQuery.active = active === 'true';
-    // }
+    if (typeof active !== 'undefined') {
+      findQuery.active = active === 'false' ? false : true;
+    }
 
     const services = await servicesCollection
       .find(findQuery)
-=======
-
-    const services = await servicesCollection
-      .find({
-        ownerId: ownerId ? getObjectId(ownerId) : { $exists: true }
-      })
->>>>>>> Stashed changes
       .sort({ created_at: -1 })
       .toArray();
 
@@ -66,13 +58,12 @@ export async function POST(req) {
       openingTime,
       closingTime,
       images,
-      packages
+      packages,
+      experienceYears,
+      experienceMonths
     } = await req.json();
 
-<<<<<<< Updated upstream
 
-=======
->>>>>>> Stashed changes
     const newService = {
       ownerId: objectId,
       serviceName,
@@ -86,11 +77,9 @@ export async function POST(req) {
       closingTime,
       images,
       packages,
-<<<<<<< Updated upstream
+      experienceYears: Number.isFinite(Number(experienceYears)) ? Number(experienceYears) : 0,
+      experienceMonths: Number.isFinite(Number(experienceMonths)) ? Number(experienceMonths) : 0,
       active: typeof req.body?.active !== 'undefined' ? req.body.active : true,
-=======
-      active: true,
->>>>>>> Stashed changes
       created_at: new Date(),
       updated_at: new Date()
     };
@@ -123,11 +112,9 @@ export async function PUT(req) {
       closingTime,
       images,
       packages,
-<<<<<<< Updated upstream
-  active = true
-=======
+      experienceYears,
+      experienceMonths,
       active = true
->>>>>>> Stashed changes
     } = await req.json();
 
     const ObjectId = getObjectId(id);
@@ -135,7 +122,7 @@ export async function PUT(req) {
 
     const service = await servicesCollection.findOne({ _id: ObjectId });
     if (!service) {
-      return NextResponse.json({ success: false, message: "Dịch vụ makeup không tồn tại" }, { status: 404 });
+      return NextResponse.json({ success: false, message: "Gói dịch vụ không tồn tại" }, { status: 404 });
     }
 
     await servicesCollection.updateOne(
@@ -153,11 +140,9 @@ export async function PUT(req) {
           closingTime,
           images,
           packages,
-<<<<<<< Updated upstream
+          experienceYears: Number.isFinite(Number(experienceYears)) ? Number(experienceYears) : 0,
+          experienceMonths: Number.isFinite(Number(experienceMonths)) ? Number(experienceMonths) : 0,
           active: typeof active !== 'undefined' ? active : true,
-=======
-          active,
->>>>>>> Stashed changes
           updated_at: new Date()
         }
       }

@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
@@ -179,3 +180,7 @@ const TimelineHistoryPage = () => {
 };
 
 export default TimelineHistoryPage;
+=======
+export { default } from "../../../makeup-artists/(page)/timeline-dat-lich-makeup/page";
+
+>>>>>>> Stashed changes
