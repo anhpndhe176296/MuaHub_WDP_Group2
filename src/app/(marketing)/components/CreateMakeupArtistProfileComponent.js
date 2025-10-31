@@ -55,8 +55,7 @@ const CreateMakeupArtistProfileComponent = ({ currentUser, onSubmit, isUpgradeRe
 
   const fetchBasicInfo = async () => {
     try {
-      console.log("Fetching basic info for user:", currentUser);
-      const res = await SendRequest("get", `/api/makeup-artists/request-profile/${currentUser._id}`);
+      const res = await SendRequest("get", `/api/makeup-artists/request-profile/${currentUser.id}`);
       if (res.data) {
         // Cập nhật chỉ các thông tin cơ bản
         setProfile(prev => ({
