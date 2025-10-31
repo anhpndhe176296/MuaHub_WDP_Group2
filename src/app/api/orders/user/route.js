@@ -161,7 +161,7 @@ export async function POST(req) {
         userId: objectId,
         type: "user",
         orderId: newOrder._id,
-        message: "Đặt lịch trong ngày đã được tự động xác nhận cọc, vui lòng xác nhận dịch vụ để hoàn tất đặt lịch.",
+        message: "Đặt lịch trong ngày đã được tự động xác nhận cọc",
         isRead: false,
         created_at: now,
         updated_at: now
@@ -190,7 +190,7 @@ export async function PUT(req) {
 
     const order = await ordersCollection.findOne({ _id: ObjectId });
     if (!order) {
-      return NextResponse.json({ success: false, message: "Dịch vụ makeup không tồn tại" }, { status: 404 });
+      return NextResponse.json({ success: false, message: "Gói dịch vụ không tồn tại" }, { status: 404 });
     }
 
     // Quy trình xác nhận:
