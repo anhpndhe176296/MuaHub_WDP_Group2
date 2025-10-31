@@ -11,25 +11,6 @@
   import { Badge, IconButton, Menu, MenuItem, CircularProgress, Typography, Box } from "@mui/material";
   
   const HeaderComponent = () => {
-  // Favorite count from localStorage
-  const [favoriteCount, setFavoriteCount] = useState(0);
-
-  // Update favorite count from localStorage
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      const favs = JSON.parse(localStorage.getItem("favoriteServices") || "[]");
-      setFavoriteCount(favs.length);
-    }
-    // Listen to storage event for cross-tab sync
-    const handleStorage = (e) => {
-      if (e.key === "favoriteServices") {
-        const favs = JSON.parse(e.newValue || "[]");
-        setFavoriteCount(favs.length);
-      }
-    };
-    window.addEventListener("storage", handleStorage);
-    return () => window.removeEventListener("storage", handleStorage);
-  }, []);
     const pathUrl = usePathname();
     const { currentUser, refreshUserData } = useApp();
     const { data: session } = useSession();
@@ -387,7 +368,7 @@
                         zIndex: 2
                       }}
                     >
-                      {favoriteCount}
+                      2
                       <span className="visually-hidden">favorite items</span>
                     </span>
                   </span>
