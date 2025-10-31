@@ -52,7 +52,11 @@ const BannerManagementPage = () => {
     setLoading(true);
     try {
       const res = await SendRequest("GET", "/api/banners", {
+<<<<<<< Updated upstream
         ownerId: currentUser._id
+=======
+        ownerId: currentUser.id
+>>>>>>> Stashed changes
       });
       if (res) {
         setBanners(res.payload || []);
@@ -63,6 +67,7 @@ const BannerManagementPage = () => {
     } finally {
       setLoading(false);
     }
+<<<<<<< Updated upstream
   }, [currentUser._id]);
 
   useEffect(() => {
@@ -70,6 +75,15 @@ const BannerManagementPage = () => {
       fetchBanners();
     }
   }, [currentUser._id, fetchBanners]);
+=======
+  }, [currentUser.id]);
+
+  useEffect(() => {
+    if (currentUser.id) {
+      fetchBanners();
+    }
+  }, [currentUser.id, fetchBanners]);
+>>>>>>> Stashed changes
 
   // Handle file upload
   const handleFileChange = (event) => {
@@ -118,7 +132,11 @@ const BannerManagementPage = () => {
       submitData.append("description", formData.description);
       submitData.append("active", formData.active);
       submitData.append("order", formData.order);
+<<<<<<< Updated upstream
       submitData.append("ownerId", currentUser._id);
+=======
+      submitData.append("ownerId", currentUser.id);
+>>>>>>> Stashed changes
       let fileUrl = "";
 
       if (formData.image) {
