@@ -6,7 +6,16 @@ import SendRequest from "@muahub/utils/SendRequest";
 import toast from "react-hot-toast";
 import SearchAddressComponent from "../../components/SearchAddressComponent";
 import { ROLE_MANAGER } from "@muahub/constants/System";
+<<<<<<< Updated upstream
 
+=======
+<<<<<<< Updated upstream
+
+=======
+import Button from '@mui/material/Button';
+import { useRouter } from "next/navigation";
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
 const AuthRegister = ({ title, subtitle, subtext }) => {
   const [account, setAccount] = useState({
     name: "",
@@ -50,7 +59,15 @@ const AuthRegister = ({ title, subtitle, subtext }) => {
       const res = await SendRequest("POST", "/api/users", { ...account, address: location, role: ROLE_MANAGER.ADMIN });
       if (res.payload) {
         toast.success("Đăng ký thành công");
+<<<<<<< Updated upstream
         window.location.href = "/makeup-artists/dang-nhap";
+=======
+<<<<<<< Updated upstream
+        window.location.href = "/makeup-artists/dang-nhap";
+=======
+        router.push("/makeup-artists/dang-nhap");
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
       } else {
         toast.error("Đăng ký thất bại, vui lòng kiểm tra thông tin của bạn.");
       }

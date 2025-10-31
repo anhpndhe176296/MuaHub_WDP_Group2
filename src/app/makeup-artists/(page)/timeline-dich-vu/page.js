@@ -25,7 +25,7 @@ const TimelineHistoryPage = () => {
     setLoading(true);
     try {
       const res = await SendRequest("GET", "/api/orders", {
-        ownerId: currentUser.role === ROLE_MANAGER.SALE ? currentUser._id : "",
+        ownerId: currentUser.role === ROLE_MANAGER.SALE ? currentUser.id : "",
         date: date
       });
       if (res.payload) {
@@ -44,7 +44,7 @@ const TimelineHistoryPage = () => {
     } finally {
       setLoading(false);
     }
-  }, [currentUser._id, currentUser.role, date]);
+  }, [currentUser.id, currentUser.role, date]);
 
   useEffect(() => {
     if (Object.keys(currentUser).length === 0 || date === "") return;
@@ -166,7 +166,7 @@ const TimelineHistoryPage = () => {
               <Typography>Email: {booking.user.email}</Typography>
               <Typography>Phone: {booking.user.phone}</Typography>
               <Typography>Thời gian: {booking.time}</Typography>
-              <Typography>Dịch vụ makeup: {booking.service.serviceName}</Typography>
+              <Typography>Gói dịch vụ: {booking.service.serviceName}</Typography>
               <Typography>Loại dịch vụ makeup: {booking.service.packages[booking.field].name}</Typography>
             </Paper>
           ))}

@@ -4,7 +4,15 @@ import { MongoClient } from "mongodb";
 
 const uri = MONGODB_CONNECT;
 const options = {
+<<<<<<< Updated upstream
   useNewUrlParser: true // Loại bỏ useUnifiedTopology
+=======
+<<<<<<< Updated upstream
+  useNewUrlParser: true // Loại bỏ useUnifiedTopology
+=======
+  // useNewUrlParser: true // Loại bỏ useUnifiedTopology
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
 };
 
 let client;

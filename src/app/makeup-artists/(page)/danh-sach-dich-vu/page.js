@@ -20,7 +20,11 @@ import { useApp } from "@muahub/app/contexts/AppContext";
 import { ROLE_MANAGER } from "@muahub/constants/System";
 import AddServiceModal from "./components/modalThemDichVu";
 import EditServiceModal from "./components/modalSuaDichVu";
+<<<<<<< Updated upstream
 
+=======
+import toast from "react-hot-toast";
+>>>>>>> Stashed changes
 const ServiceListPage = () => {
   const { currentUser } = useApp();
   const [services, setServices] = useState([]);
@@ -34,8 +38,18 @@ const ServiceListPage = () => {
   const fetchData = useCallback(async () => {
     setLoading(true);
     try {
+<<<<<<< Updated upstream
       const res = await SendRequest("GET", "/api/services", {
         ownerId: currentUser.role === ROLE_MANAGER.SALE ? currentUser._id : ""
+=======
+<<<<<<< Updated upstream
+      const res = await SendRequest("GET", "/api/services", {
+        ownerId: currentUser.role === ROLE_MANAGER.SALE ? currentUser._id : ""
+=======
+      const res = await SendRequest("GET", "/api/services/MUA", {
+        ownerId: currentUser.role === ROLE_MANAGER.MUA ? currentUser.id : ""
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
       });
       if (res.payload) {
         setServices(res.payload);
@@ -234,6 +248,7 @@ const ServiceListPage = () => {
                     </Button>
                     <Button
                       variant="outlined"
+<<<<<<< Updated upstream
                       color="error"
                       size="small"
                       onClick={async () => {
@@ -252,6 +267,39 @@ const ServiceListPage = () => {
                       }}
                     >
                       Xóa
+=======
+                      color={service.active ? "error" : "success"}
+                      size="small"
+                      onClick={async () => {
+                        const confirmMsg = service.active
+                          ? "Bạn chắc chắn muốn ẩn dịch vụ này?"
+                          : "Bạn muốn hiện lại dịch vụ này?";
+                        if (!window.confirm(confirmMsg)) return;
+                        try {
+                          const res = await SendRequest("PUT", "/api/services", {
+                            id: service._id,
+                            active: !service.active,
+                            serviceName: service.serviceName,
+                            description: service.description,
+                            location: service.location,
+                            locationDetail: service.locationDetail,
+                            latitude: service.latitude,
+                            longitude: service.longitude,
+                            amenities: service.amenities,
+                            openingTime: service.openingTime,
+                            closingTime: service.closingTime,
+                            images: service.images,
+                            packages: service.packages
+                          });
+                            toast.success(service.active ? "Đã ẩn dịch vụ" : "Đã hiện dịch vụ");
+                            fetchData();              
+                        } catch (e) {
+                          toast.error("Có lỗi xảy ra khi cập nhật", e);
+                        }
+                      }}
+                    >
+                      {service.active ? "Ẩn" : "Hiện"}
+>>>>>>> Stashed changes
                     </Button>
                   </Box>
                 </CardContent>
