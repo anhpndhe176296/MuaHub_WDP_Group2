@@ -4,7 +4,15 @@ import Link from "next/link";
 import CustomTextField from "@muahub/app/makeup-artists/components/forms/theme-elements/CustomTextField";
 import SendRequest from "@muahub/utils/SendRequest";
 import toast from "react-hot-toast";
+<<<<<<< Updated upstream
 
+=======
+<<<<<<< Updated upstream
+
+=======
+// import Button from '@mui/material/Button';
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
 const AuthForgotPassword = ({ title, subtitle, subtext }) => {
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);

@@ -24,7 +24,15 @@ const TimelineHistoryPage = () => {
     setLoading(true);
     try {
       const res = await SendRequest("GET", "/api/orders", {
+<<<<<<< Updated upstream
         ownerId: currentUser.role === ROLE_MANAGER.SALE ? currentUser._id : "",
+=======
+<<<<<<< Updated upstream
+        ownerId: currentUser.role === ROLE_MANAGER.SALE ? currentUser._id : "",
+=======
+        ownerId: currentUser.role === ROLE_MANAGER.SALE ? currentUser.id : "",
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
         date: date
       });
       if (res.payload) {
@@ -36,7 +44,15 @@ const TimelineHistoryPage = () => {
     } finally {
       setLoading(false);
     }
+<<<<<<< Updated upstream
   }, [currentUser._id, currentUser.role, date]);
+=======
+<<<<<<< Updated upstream
+  }, [currentUser._id, currentUser.role, date]);
+=======
+  }, [currentUser.id, currentUser.role, date]);
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
 
   useEffect(() => {
     if (Object.keys(currentUser).length === 0 || date === "") return;
@@ -158,7 +174,15 @@ const TimelineHistoryPage = () => {
               <Typography>Email: {booking.user.email}</Typography>
               <Typography>Phone: {booking.user.phone}</Typography>
               <Typography>Thời gian: {booking.time}</Typography>
+<<<<<<< Updated upstream
               <Typography>Dịch vụ makeup: {booking.service.serviceName}</Typography>
+=======
+<<<<<<< Updated upstream
+              <Typography>Dịch vụ makeup: {booking.service.serviceName}</Typography>
+=======
+              <Typography>Gói dịch vụ: {booking.service.serviceName}</Typography>
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
               <Typography>Loại dịch vụ makeup: {booking.service.packages[booking.field].name}</Typography>
             </Paper>
           ))}

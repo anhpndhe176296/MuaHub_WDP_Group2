@@ -39,7 +39,15 @@ const UserListPage = () => {
     setLoading(true);
     try {
       const res = await SendRequest("GET", "/api/users", {
+<<<<<<< Updated upstream
         role: ROLE_MANAGER.SALE
+=======
+<<<<<<< Updated upstream
+        role: ROLE_MANAGER.SALE
+=======
+        role: ROLE_MANAGER.MUA
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
       });
       if (res.payload) {
         setUsers(res.payload);
