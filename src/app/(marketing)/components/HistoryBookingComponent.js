@@ -24,12 +24,12 @@ const HistoryBookingComponent = ({ currentUser }) => {
 
   const fetchBookings = useCallback(async () => {
     setLoading(true);
-    const res = await SendRequest("GET", "/api/orders/user", { userId: currentUser.id });
+    const res = await SendRequest("GET", "/api/orders/user", { userId: currentUser._id });
     if (res.payload) {
       setBookings(res.payload);
     }
     setLoading(false);
-  }, [currentUser.id]);
+  }, [currentUser._id]);
 
   const handleCancelBooking = async () => {
     if (!currentUser.bank_info_number || !currentUser.bank_info) {
@@ -44,7 +44,7 @@ const HistoryBookingComponent = ({ currentUser }) => {
       totalAmount: selectedBooking.deposit,
       discount: 10,
       type: "cancel_booking",
-      userId: currentUser.id,
+      userId: currentUser._id,
       bank_info_number: currentUser.bank_info_number,
       bank_info: currentUser.bank_info,
       name: currentUser.name,
@@ -58,7 +58,7 @@ const HistoryBookingComponent = ({ currentUser }) => {
 
   useEffect(() => {
     fetchBookings();
-  }, [currentUser.id, fetchBookings, showModal]);
+  }, [currentUser._id, fetchBookings, showModal]);
 
   useEffect(() => {
     const fetchFeedbacks = async () => {
@@ -68,18 +68,18 @@ const HistoryBookingComponent = ({ currentUser }) => {
       }
     };
     fetchFeedbacks();
-  }, [currentUser.id]);
+  }, [currentUser._id]);
 
   // disable feedback for bookings that have already been rated
   const ratedOrderIds = userFeedback
-    .filter((feedback) => feedback.userId === currentUser.id)
+    .filter((feedback) => feedback.userId === currentUser._id)
     .map((feedback) => feedback.orderId);
   const bookingsFiltered = bookings.filter((booking) => !ratedOrderIds.includes(booking._id));
 
   const servicesRated = [];
   bookingsFiltered.forEach((booking) => {
     const matchedOrder = userFeedback.find(
-      (feedback) => feedback.orderId === booking._id && feedback.userId === currentUser.id
+      (feedback) => feedback.orderId === booking._id && feedback.userId === currentUser._id
     );
 
     if (matchedOrder && matchedOrder.service) {
@@ -97,7 +97,7 @@ const HistoryBookingComponent = ({ currentUser }) => {
     }
 
     const payload = {
-      userId: currentUser.id,
+      userId: currentUser._id,
       orderId: serviceFeedback._id,
       serviceId: serviceFeedback.serviceId,
       title: feedback.title,
@@ -122,7 +122,7 @@ const HistoryBookingComponent = ({ currentUser }) => {
     }
 
     const fetchBookings = async () => {
-      const res = await SendRequest("GET", "/api/orders", { userId: currentUser.id });
+      const res = await SendRequest("GET", "/api/orders", { userId: currentUser._id });
       if (res) {
         setBookings(res.payload);
       }

@@ -35,7 +35,7 @@ const ServiceListPage = () => {
     setLoading(true);
     try {
       const res = await SendRequest("GET", "/api/services", {
-        ownerId: currentUser.role === ROLE_MANAGER.MUA ? currentUser._id : ""
+        ownerId: currentUser.role === ROLE_MANAGER.SALE ? currentUser._id : ""
       });
       if (res.payload) {
         setServices(res.payload);
@@ -96,7 +96,7 @@ const ServiceListPage = () => {
       <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
         <Typography variant="h4">Danh sách dịch vụ</Typography>
         <Box display="flex" gap={2}>
-          <Link href="/admin/them-dich-vu">
+          <Link href="/makeup-artists/them-dich-vu">
             <Button
               variant="contained"
               startIcon={<Add />}
@@ -123,7 +123,7 @@ const ServiceListPage = () => {
                 <Typography variant="h6" color="textSecondary" mb={2}>
                   Chưa có dịch vụ nào
                 </Typography>
-                <Link href="/admin/them-dich-vu">
+                <Link href="/makeup-artists/them-dich-vu">
                   <Button
                     variant="contained"
                     startIcon={<Add />}
@@ -206,7 +206,7 @@ const ServiceListPage = () => {
                     <strong>Loại dịch vụ makeup khả dụng:</strong>
                   </Typography>
                   <ul style={{ marginBottom: 0 }}>
-                    {Object.values(service?.packages || {})
+                    {Object.values(service.packages)
                       .filter((field) => field.isAvailable)
                       .map((field, index) => (
                         <li key={index}>
