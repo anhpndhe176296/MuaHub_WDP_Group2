@@ -11,10 +11,43 @@
   import { Badge, IconButton, Menu, MenuItem, CircularProgress, Typography, Box } from "@mui/material";
   
   const HeaderComponent = () => {
+  // Favorite count from localStorage
+  const [favoriteCount, setFavoriteCount] = useState(0);
+
+  // Update favorite count from localStorage
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const favs = JSON.parse(localStorage.getItem("favoriteServices") || "[]");
+      setFavoriteCount(favs.length);
+    }
+    // Listen to storage event for cross-tab sync
+    const handleStorage = (e) => {
+      if (e.key === "favoriteServices") {
+        const favs = JSON.parse(e.newValue || "[]");
+        setFavoriteCount(favs.length);
+      }
+    };
+    window.addEventListener("storage", handleStorage);
+    return () => window.removeEventListener("storage", handleStorage);
+  }, []);
     const pathUrl = usePathname();
-    const { currentUser } = useApp();
+    const { currentUser, refreshUserData } = useApp();
     const { data: session } = useSession();
-    const isLoggedIn = currentUser && Object.keys(currentUser).length > 0 || session?.user;
+    // Consider user logged in only if session.user exists OR currentUser has a valid id or email
+    const isLocalUserValid = currentUser && (currentUser.id || currentUser._id || currentUser.email);
+    const isLoggedIn = !!(session?.user || isLocalUserValid);
+    // Debug log
+    console.log("HeaderComponent - isLoggedIn:", isLoggedIn, "session:", session, "currentUser:", currentUser);
+    // Log user session info when logged in (Google hoặc thường)
+    useEffect(() => {
+      if (isLoggedIn) {
+        if (session?.user) {
+          console.log('[Header] User session (Google/next-auth):', session.user);
+        } else if (currentUser && Object.keys(currentUser).length > 0) {
+          console.log('[Header] User session (local):', currentUser);
+        }
+      }
+    }, [isLoggedIn, session, currentUser]);
     const [allMakeups, setAllMakeups] = useState([]);
     const [searchValue, setSearchValue] = useState("");
     const [showResults, setShowResults] = useState(false);
@@ -65,6 +98,34 @@
         }
       };
       fetchNotifications();
+    }, [isLoggedIn, currentUser]);
+
+    // Refetch notifications when user just logged in (isLoggedIn chuyển từ false sang true)
+    const prevIsLoggedIn = useRef(isLoggedIn);
+    useEffect(() => {
+      if (!prevIsLoggedIn.current && isLoggedIn) {
+        // User vừa đăng nhập, fetch lại notifications
+        const fetchNotifications = async () => {
+          setLoadingNoti(true);
+          try {
+            const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
+            const userIdParam = currentUser?._id || currentUser?.id || currentUser?.userId;
+            let url = '/api/notifications/user';
+            if (userIdParam) url += `?userId=${encodeURIComponent(userIdParam)}`;
+            const res = await fetch(url, {
+              headers: token ? { Authorization: `Bearer ${token}` } : undefined,
+            });
+            const data = await res.json();
+            if (data.success) setNotifications(data.data);
+          } catch (err) {
+            setNotifications([]);
+          } finally {
+            setLoadingNoti(false);
+          }
+        };
+        fetchNotifications();
+      }
+      prevIsLoggedIn.current = isLoggedIn;
     }, [isLoggedIn, currentUser]);
 
     const unreadCount = notifications.filter(n => !n.isRead).length;
@@ -218,12 +279,29 @@
     };
 
     const logout = async () => {
-      // Logout from both traditional and Google auth
-      localStorage.removeItem("token");
-      if (session) {
-        await signOut({ redirect: false });
+      try {
+        // Xóa token trước
+       localStorage.removeItem("token");
+      localStorage.removeItem("user");
+      localStorage.removeItem("redirectUrl");
+      localStorage.removeItem("nextauth.message");
+        
+        // Đăng xuất Google nếu đang dùng session
+        if (session) {
+          await signOut({ redirect: false });
+        }
+
+        // Đợi refresh user data hoàn tất
+        await refreshUserData();
+
+        // Sau khi mọi thứ hoàn tất mới chuyển trang
+        router.push("/");
+      } catch (error) {
+        console.error("Logout error:", error);
+        // Vẫn refresh user data và chuyển trang ngay cả khi có lỗi
+        await refreshUserData();
+        router.push("/");
       }
-      router.push("/");
     };
     // console.log(11111, currentUser);
   // console.log("showResults", showResults);
@@ -309,12 +387,16 @@
                         zIndex: 2
                       }}
                     >
-                      2
+                      {favoriteCount}
                       <span className="visually-hidden">favorite items</span>
                     </span>
                   </span>
                 </Link>
               )}
+              {/* Blog bài viết */}
+              <Link href="/blog" className={`nav-item nav-link ${pathUrl === "/blog" ? "active" : ""}`}>
+                Bài viết
+              </Link>
               <Link href="/lien-he" className={`nav-item nav-link ${pathUrl === "/lien-he" ? "active" : ""}`}>
                 Liên hệ
               </Link>
