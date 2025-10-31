@@ -14,19 +14,44 @@ import { useRouter } from "next/navigation";
 const AdminLayout = ({ children }) => {
   const { currentUser, loading } = useApp();
   const pathUrl = usePathname();
+<<<<<<< Updated upstream
   const router = useRouter();
 
   if (currentUser.role === ROLE_MANAGER.USER) {
     router.push("/");
+=======
+<<<<<<< Updated upstream
+
+  if (currentUser.role === ROLE_MANAGER.USER) {
+    window.location.href = "/";
+=======
+  const router = useRouter();
+<<<<<<< Updated upstream
+
+  if (currentUser.role === ROLE_MANAGER.USER) {
+=======
+console.log("Current User in Makeup Artists Layout:", currentUser);
+  if (currentUser?.role === ROLE_MANAGER.USER) {
+>>>>>>> Stashed changes
+    router.push("/");
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
     return;
   }
 
-  const url = ["/makeup-artists/dang-nhap", "/makeup-artists/dang-ky"];
+  // const url = ["/dang-nhap", "/dang-ky"];
 
+<<<<<<< Updated upstream
   if (!loading && Object.keys(currentUser).length === 0 && !url.includes(pathUrl)) {
     router.push("/makeup-artists/dang-nhap");
     return;
   }
+=======
+  // if (!loading && !currentUser?.role && !url.includes(pathUrl)) {
+  //   router.push("/dang-nhap");
+  //   return;
+  // }
+>>>>>>> Stashed changes
 
   return (
     <ThemeProvider theme={baselightTheme}>

@@ -85,7 +85,15 @@ const FeedbackManagementPage = () => {
                 <TableCell>Ngày gửi</TableCell>
                 <TableCell>Người gửi</TableCell>
                 <TableCell>Thông tin liên hệ</TableCell>
+<<<<<<< Updated upstream
                 <TableCell>Dịch vụ makeup</TableCell>
+=======
+<<<<<<< Updated upstream
+                <TableCell>Dịch vụ makeup</TableCell>
+=======
+                <TableCell>Gói dịch vụ</TableCell>
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
                 <TableCell>Loại dịch vụ makeup</TableCell>
                 <TableCell>Ngày đặt</TableCell>
                 <TableCell>Tiêu đề</TableCell>
@@ -107,7 +115,15 @@ const FeedbackManagementPage = () => {
                     <Typography>{feedback.service.serviceName}</Typography>
                     {feedback.service.locationDetail}, {feedback.service.location}
                   </TableCell>
+<<<<<<< Updated upstream
                   <TableCell>{feedback.order.field} người</TableCell>
+=======
+<<<<<<< Updated upstream
+                  <TableCell>{feedback.order.field} người</TableCell>
+=======
+                  <TableCell>{feedback.order.field}</TableCell>
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
                   <TableCell>
                     {feedback.order.date}
                     <br />

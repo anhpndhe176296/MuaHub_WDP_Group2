@@ -7,7 +7,15 @@ import Link from "next/link";
 export default function PaymentSuccess() {
   const searchParams = useSearchParams();
   const orderId = searchParams.get("orderId");
+<<<<<<< Updated upstream
   const [orderDetails, setOrderDetails] = useState(null);
+=======
+<<<<<<< Updated upstream
+  const [orderDetails, setOrderDetails] = useState(null);
+=======
+  // const [orderDetails, setOrderDetails] = useState(null);
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
 
   useEffect(() => {
     if (orderId) {

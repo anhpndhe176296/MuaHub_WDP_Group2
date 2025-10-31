@@ -3,6 +3,10 @@
 import { useCallback, useEffect, useState } from "react";
 import {
   Box,
+<<<<<<< Updated upstream
+=======
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
   Button,
   Typography,
   CircularProgress,
@@ -20,13 +24,38 @@ import {
   Chip,
   Alert
 } from "@mui/material";
+<<<<<<< Updated upstream
+=======
+=======
+  Typography,
+  Grid,
+  Chip
+} from "@mui/material";
+import PlanCard from "./components/PlanCard";
+import CurrentPlanAlert from "./components/CurrentPlanAlert";
+import PlanTable from "./components/PlanTable";
+import PaymentHistoryTable from "./components/PaymentHistoryTable";
+import PaymentModal from "./components/PaymentModal";
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
 import SendRequest from "@muahub/utils/SendRequest";
 // import PageContainer from "../components/container/PageContainer";
 import { useApp } from "@muahub/app/contexts/AppContext";
 import { formatCurrency } from "@muahub/utils/Main";
 import toast from "react-hot-toast";
+<<<<<<< Updated upstream
 import { ROLE_MANAGER } from "@muahub/constants/System";
 import { ACCOUNT_NO, ACQ_ID, WEB_NAME } from "@muahub/constants/MainContent";
+=======
+<<<<<<< Updated upstream
+import { ROLE_MANAGER } from "@muahub/constants/System";
+import { ACCOUNT_NO, ACQ_ID, WEB_NAME } from "@muahub/constants/MainContent";
+=======
+// import { ROLE_MANAGER } from "@muahub/constants/System";
+// import { ACCOUNT_NO, ACQ_ID, WEB_NAME } from "@muahub/constants/MainContent";
+
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
 import { v4 as uuidv4 } from "uuid";
 
 const WebsitePaymentPage = () => {
@@ -35,13 +64,33 @@ const WebsitePaymentPage = () => {
   const [openPaymentModal, setOpenPaymentModal] = useState(false);
   const [selectedPaymentType, setSelectedPaymentType] = useState("");
   const [paymentQrCode, setPaymentQrCode] = useState("");
+<<<<<<< Updated upstream
   const [websitePayments, setWebsitePayments] = useState([]);
+=======
+<<<<<<< Updated upstream
+  const [websitePayments, setWebsitePayments] = useState([]);
+=======
+  // PayOS integration
+  const [payosInfo, setPayosInfo] = useState(null);
+  const [payosQr, setPayosQr] = useState("");
+  const [paymentMethod, setPaymentMethod] = useState("");
+  const [currentOrderCode, setCurrentOrderCode] = useState(null);
+  // const [websitePayments, setWebsitePayments] = useState([]);
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
   const [currentPlan, setCurrentPlan] = useState(null);
   const [currentPaymentAmount, setCurrentPaymentAmount] = useState(0);
   const [paymentHistory, setPaymentHistory] = useState([]);
 
   const paymentTypes = {
     revenue: {
+<<<<<<< Updated upstream
+=======
+<<<<<<< Updated upstream
+=======
+      key: 'revenue',
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
       label: "Thu theo doanh thu",
       amount: 0,
       description: "Không có phí cố định - Thu % theo doanh thu",
@@ -49,6 +98,13 @@ const WebsitePaymentPage = () => {
       popular: false
     },
     monthly_3: {
+<<<<<<< Updated upstream
+=======
+<<<<<<< Updated upstream
+=======
+      key: 'monthly_3',
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
       label: "Gói 3 tháng",
       amount: 3000000,
       description: "3,000,000 VNĐ cho 3 tháng sử dụng",
@@ -56,6 +112,13 @@ const WebsitePaymentPage = () => {
       popular: false
     },
     monthly_6: {
+<<<<<<< Updated upstream
+=======
+<<<<<<< Updated upstream
+=======
+      key: 'monthly_6',
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
       label: "Gói 6 tháng",
       amount: 5500000,
       description: "5,500,000 VNĐ cho 6 tháng sử dụng",
@@ -63,6 +126,13 @@ const WebsitePaymentPage = () => {
       popular: true
     },
     yearly: {
+<<<<<<< Updated upstream
+=======
+<<<<<<< Updated upstream
+=======
+      key: 'yearly',
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
       label: "Gói 1 năm",
       amount: 10000000,
       description: "10,000,000 VNĐ cho 1 năm sử dụng - Tiết kiệm nhất",
@@ -70,6 +140,10 @@ const WebsitePaymentPage = () => {
       popular: false
     }
   };
+<<<<<<< Updated upstream
+=======
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
 
   const fetchWebsitePayments = useCallback(async () => {
     setLoading(true);
@@ -86,19 +160,68 @@ const WebsitePaymentPage = () => {
       setLoading(false);
     }
   }, [currentUser]);
+<<<<<<< Updated upstream
+=======
+=======
+  // Thứ tự ưu tiên các gói
+  const planPriority = {
+    revenue: 0,
+    monthly_3: 1,
+    monthly_6: 2,
+    yearly: 3
+  };
+  // const fetchWebsitePayments = useCallback(async () => {
+  //   setLoading(true);
+  //   try {
+  //     const res = await SendRequest("GET", "/api/website-payments", {
+  //       ownerId: currentUser.id
+  //     });
+  //     if (res.payload) {
+  //       setWebsitePayments(res.payload);
+  //     }
+  //   } catch (error) {
+  //     console.error("Error fetching website payments:", error);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // }, [currentUser]);
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
 
   const fetchCurrentUser = useCallback(async () => {
     try {
       const res = await SendRequest("GET", "/api/users/me");
+<<<<<<< Updated upstream
       if (res.data) {
         setCurrentPlan(res.data.payment_type);
         setCurrentPaymentAmount(res.data.payment_amount || 0);
+=======
+<<<<<<< Updated upstream
+      if (res.data) {
+        setCurrentPlan(res.data.payment_type);
+        setCurrentPaymentAmount(res.data.payment_amount || 0);
+=======
+      if (res.payload) {
+        setCurrentPlan(res.payload.payment_type);
+      
+        setCurrentPaymentAmount(res.payload.payment_amount || 0);
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
       }
     } catch (error) {
       console.error("Error fetching current user:", error);
     }
   }, []);
+<<<<<<< Updated upstream
 
+=======
+<<<<<<< Updated upstream
+
+=======
+// console.log('Current Plan:', currentPlan);
+// console.log('Current Payment Amount:', currentPaymentAmount);
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
   // Thêm hàm fetch lịch sử thanh toán
   const fetchPaymentHistory = useCallback(async () => {
     try {
@@ -113,6 +236,10 @@ const WebsitePaymentPage = () => {
 
   useEffect(() => {
     if (Object.keys(currentUser).length === 0) return;
+<<<<<<< Updated upstream
+=======
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
     fetchWebsitePayments();
     fetchCurrentUser();
     fetchPaymentHistory();
@@ -177,11 +304,69 @@ const WebsitePaymentPage = () => {
           clearInterval(intervalId); // Stop polling when success
         }, 1500);
       }, 5000); // Simulate loading
+<<<<<<< Updated upstream
+=======
+=======
+    // fetchWebsitePayments();
+    fetchCurrentUser();
+    fetchPaymentHistory();
+  }, [currentUser, fetchCurrentUser, fetchPaymentHistory]);
+
+  // PayOS: generate payment link and QR
+  const generatePayosLink = async (amount, content, orderCode) => {
+    let safeContent = content;
+    if (safeContent.length > 25) safeContent = safeContent.slice(0, 25);
+    try {
+      const res = await fetch("/api/payos-link", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          orderCode: orderCode,
+          amount: 2000,
+          description: safeContent,
+          cancelUrl: window.location.origin + "/thanh-toan-that-bai",
+          returnUrl: window.location.origin + "/thanh-toan-thanh-cong"
+        })
+      });
+      const raw = await res.json();
+      const data = raw.data || raw;
+      setPayosInfo(data);
+      setPayosQr(data.qrCode || "");
+      setPaymentQrCode("");
+    } catch (error) {
+      toast.error("Không thể tạo mã QR PayOS");
+    }
+  };
+
+  // Lưu uuid cho đơn hàng vào state để dùng khi xác nhận
+  const [currentPaymentUUID, setCurrentPaymentUUID] = useState("");
+
+  const handleSelectPlan = async (paymentType) => {
+    setSelectedPaymentType(paymentType);
+    if (paymentType === "revenue") {
+      setPaymentMethod("");
+      handleConfirmPayment(paymentType);
+    } else {
+      setOpenPaymentModal(true);
+      setPaymentMethod("payos");
+      let uuid = uuidv4();
+      uuid = uuid.replace(/-/g, "");
+      setCurrentPaymentUUID(uuid);
+      // Tạo orderCode và lưu lại để dùng khi polling
+      const orderCode = Date.now();
+      setCurrentOrderCode(orderCode);
+      await generatePayosLink(paymentTypes[paymentType].amount, uuid, orderCode);
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
     }
   };
 
   const handleConfirmPayment = async (paymentType = selectedPaymentType) => {
     try {
+<<<<<<< Updated upstream
+=======
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
       if (paymentType !== "revenue") {
         // Tạo bản ghi thanh toán cho các gói trả phí
         await SendRequest("POST", "/api/website-payments", {
@@ -190,6 +375,31 @@ const WebsitePaymentPage = () => {
           amount: paymentTypes[paymentType].amount,
           status: "PENDING"
         });
+<<<<<<< Updated upstream
+=======
+=======
+      let paymentId = null;
+      if (paymentType !== "revenue") {
+        // Tạo bản ghi thanh toán cho các gói trả phí
+        await SendRequest("POST", "/api/website-payments", {
+          ownerId: currentUser.id,
+          payment_package: paymentType,
+          amount: paymentTypes[paymentType].amount,
+          status: "PENDING"
+        });
+        // Lấy payment vừa tạo (có thể lấy theo ownerId, payment_package, status: "PENDING")
+        const res = await SendRequest("GET", "/api/website-payments", {
+          ownerId: currentUser.id,
+          payment_package: paymentType,
+          status: "PENDING"
+        });
+        // console.log('Payment fetch response:', res);
+        if (res.payload.payload && res.payload.payload.length > 0) {
+          // console.log('paymentId found:', res.payload.payload[0]._id);
+          paymentId = res.payload.payload[0]._id;
+        }
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
       }
 
       // Tạo object lịch sử thanh toán
@@ -199,7 +409,15 @@ const WebsitePaymentPage = () => {
         amount: paymentTypes[paymentType].amount,
         description: `Thanh toán ${paymentTypes[paymentType].label}`,
         status: paymentType === "revenue" ? "Đang hoạt động" : "Chờ xác nhận",
+<<<<<<< Updated upstream
         transaction_id: `PAY_${Date.now()}_${currentUser._id.slice(-6)}` // Tạo mã giao dịch unique
+=======
+<<<<<<< Updated upstream
+        transaction_id: `PAY_${Date.now()}_${currentUser._id.slice(-6)}` // Tạo mã giao dịch unique
+=======
+        transaction_id: `PAY_${Date.now()}_${currentUser.id.slice(-6)}` // Tạo mã giao dịch unique
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
       };
 
       // Cập nhật payment_type, payment_amount và thêm lịch sử thanh toán cho user
@@ -214,17 +432,47 @@ const WebsitePaymentPage = () => {
       }
 
       await SendRequest("PUT", "/api/users", {
+<<<<<<< Updated upstream
         id: currentUser._id,
+=======
+<<<<<<< Updated upstream
+        id: currentUser._id,
+=======
+        id: currentUser.id,
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
         payment_type: paymentType,
         payment_amount: paymentTypes[paymentType].amount,
         payment_history: paymentHistoryRecord,
         payment_expiry: paymentType === "revenue" ? null : expiryDate
       });
+<<<<<<< Updated upstream
+=======
+<<<<<<< Updated upstream
+=======
+     console.log('paymentId:', paymentId);
+      // Cập nhật trạng thái payment sang CONFIRM
+      if (paymentId) {
+        await SendRequest("PUT", "/api/website-payments", {
+          id: paymentId,
+          status: "CONFIRM"
+        });
+      }
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
 
       if (paymentType === "revenue") {
         toast.success("Đã chọn gói thu theo doanh thu thành công!");
       } else {
+<<<<<<< Updated upstream
         toast.success("Yêu cầu thanh toán đã được gửi, chờ admin xác nhận!");
+=======
+<<<<<<< Updated upstream
+        toast.success("Yêu cầu thanh toán đã được gửi, chờ admin xác nhận!");
+=======
+        toast.success("Thanh toán thành công! Gói của bạn đã được kích hoạt.");
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
       }
 
       setOpenPaymentModal(false);
@@ -232,22 +480,49 @@ const WebsitePaymentPage = () => {
       setSelectedPaymentType("");
       setTimeout(() => {
         window.location.reload(); // Tải lại trang để cập nhật giao diện
+<<<<<<< Updated upstream
+=======
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
       }, 3000); // Đợi 3 giây để cập nhật giao diện
       // fetchWebsitePayments();
       // fetchCurrentUser();
       // fetchPaymentHistory(); // Thêm hàm fetch lịch sử thanh toán
     } catch (error) {
+<<<<<<< Updated upstream
+=======
+=======
+      }, 3000);
+    } catch (error) {
+      console.error("Error confirming payment:", error);
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
       toast.error("Có lỗi xảy ra khi gửi yêu cầu thanh toán");
     }
   };
 
+<<<<<<< Updated upstream
+=======
+<<<<<<< Updated upstream
+=======
+
+  // Render chip for payment type
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
   const renderPaymentTypeChip = (type) => {
     const colors = {
       revenue: "primary",
       monthly_6: "info",
       yearly: "success"
     };
+<<<<<<< Updated upstream
 
+=======
+<<<<<<< Updated upstream
+
+=======
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
     if (type === "monthly_3") {
       return (
         <Chip
@@ -257,6 +532,10 @@ const WebsitePaymentPage = () => {
         />
       );
     }
+<<<<<<< Updated upstream
+=======
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
 
     return <Chip label={paymentTypes[type]?.label || "Chưa xác định"} color={colors[type] || "default"} size="large" />;
   };
@@ -268,6 +547,16 @@ const WebsitePaymentPage = () => {
       "Đã hủy": "error"
     };
 
+<<<<<<< Updated upstream
+=======
+=======
+    return <Chip label={paymentTypes[type]?.label || "Chưa xác định"} color={colors[type] || "default"} size="large" />;
+  };
+
+  // Render chip for status
+  const renderStatusChip = (status) => {
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
     return <Chip label={status} color={"success"} size="large" variant="outlined" />;
   };
 
@@ -295,6 +584,10 @@ const WebsitePaymentPage = () => {
 
       {/* Hiển thị gói hiện tại và số tiền phải trả */}
       {currentPlan && (
+<<<<<<< Updated upstream
+=======
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
         <Alert severity="info" sx={{ mb: 3 }}>
           <Typography variant="body1">
             Gói hiện tại: <strong>{paymentTypes[currentPlan]?.label}</strong>
@@ -303,12 +596,27 @@ const WebsitePaymentPage = () => {
             Số tiền phải trả: <strong>{formatCurrency(currentPaymentAmount)}</strong>
           </Typography>
         </Alert>
+<<<<<<< Updated upstream
+=======
+=======
+        <CurrentPlanAlert
+          currentPlan={currentPlan}
+          paymentTypes={paymentTypes}
+          currentPaymentAmount={currentPaymentAmount}
+          formatCurrency={formatCurrency}
+        />
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
       )}
 
       {/* Lựa chọn gói thanh toán */}
       <Typography variant="h5" gutterBottom sx={{ mt: 4, mb: 2 }}>
         Chọn gói thanh toán
       </Typography>
+<<<<<<< Updated upstream
+=======
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
 
       <Grid container spacing={3} sx={{ mb: 4 }}>
         {Object.entries(paymentTypes).map(([key, plan]) => (
@@ -395,10 +703,46 @@ const WebsitePaymentPage = () => {
         ))}
       </Grid>
 
+<<<<<<< Updated upstream
+=======
+=======
+      <Grid container spacing={3}>
+        {Object.keys(paymentTypes)
+          .sort((a, b) => planPriority[a] - planPriority[b])
+          .map((key) => {
+            const currentLevel = planPriority[currentPlan];
+            const thisLevel = planPriority[key];
+            const isLower = currentLevel !== undefined && thisLevel < currentLevel;
+            return (
+              <Grid item xs={12} sm={6} md={3} key={key}>
+                <PlanCard
+                  paymentType={key}
+                  details={{
+                    ...paymentTypes[key],
+                    key: key // Đảm bảo key được truyền vào
+                  }}
+                  isCurrentPlan={currentPlan === key}
+                  onSelect={() => (!isLower && currentPlan !== key) && handleSelectPlan(key)}
+                  disabled={isLower}
+                  sx={isLower ? { opacity: 0.5, pointerEvents: 'none', filter: 'grayscale(1)' } : {}}
+                />
+              </Grid>
+            );
+          })}
+      </Grid>
+
+      {/* Bảng gói đang sử dụng */}
+
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
       <Typography variant="h5" gutterBottom sx={{ mt: 4, mb: 2 }}>
         Gói đang sử dụng
       </Typography>
 
+<<<<<<< Updated upstream
+=======
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
       {loading ? (
         <Box display="flex" justifyContent="center" alignItems="center" height="30vh">
           <CircularProgress />
@@ -445,12 +789,28 @@ const WebsitePaymentPage = () => {
           </Table>
         </TableContainer>
       )}
+<<<<<<< Updated upstream
+=======
+=======
+      <PlanTable
+        loading={loading}
+        currentUser={currentUser}
+        renderPaymentTypeChip={renderPaymentTypeChip}
+        renderStatusChip={renderStatusChip}
+        formatCurrency={formatCurrency}
+      />
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
 
       {/* Lịch sử thanh toán */}
       <Typography variant="h5" gutterBottom sx={{ mt: 4, mb: 2 }}>
         Lịch sử thanh toán
       </Typography>
 
+<<<<<<< Updated upstream
+=======
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
       <TableContainer component={Paper}>
         <Table sx={{ '& tbody tr:hover': { backgroundColor: '#FFF1EF' } }}>
           <TableHead>
@@ -553,6 +913,81 @@ const WebsitePaymentPage = () => {
           </Box>
         </Box>
       </Modal>
+<<<<<<< Updated upstream
+=======
+=======
+      <PaymentHistoryTable
+        paymentHistory={paymentHistory}
+        renderPaymentTypeChip={renderPaymentTypeChip}
+        formatCurrency={formatCurrency}
+        convertDateTime={convertDateTime}
+      />
+
+      {/* Modal thanh toán */}
+      <PaymentModal
+        open={openPaymentModal}
+        onClose={() => {
+          setOpenPaymentModal(false);
+          setPaymentQrCode("");
+          setSelectedPaymentType("");
+          setCurrentPaymentUUID("");
+          setPayosInfo(null);
+          setPayosQr("");
+          setPaymentMethod("");
+          setCurrentOrderCode(null);
+        }}
+        paymentType={selectedPaymentType}
+        paymentTypes={paymentTypes}
+        paymentQrCode={paymentQrCode}
+        payosInfo={payosInfo}
+        payosQr={payosQr}
+        paymentMethod={paymentMethod}
+        formatCurrency={formatCurrency}
+        onConfirm={async () => {
+          // Khi ấn xác nhận mới bắt đầu polling kiểm tra thanh toán
+          if (!currentPaymentUUID) return;
+          let pollingCount = 0;
+          const maxPolling = 40; // tối đa 40 lần (60s)
+          const orderCode = paymentMethod === "payos" ? currentOrderCode : null;
+          const uuid = currentPaymentUUID;
+          const intervalId = setInterval(async () => {
+            pollingCount++;
+            const resPayment = await SendRequest("get", `/api/webhooks`);
+            let paymentDone = false;
+            if (resPayment.payload) {
+              resPayment.payload.forEach((item) => {
+                if (paymentMethod === "vietqr") {
+                  if (item.content && item.content.includes(`dat coc ${uuid}`)) {
+                    paymentDone = true;
+                  }
+                } else if (paymentMethod === "payos") {
+                  if (item.data) {
+                    // Log để so sánh orderCode
+                    // console.log('[PAYOS] So sánh:', {
+                    //   itemOrderCode: item.data.orderCode,
+                    //   pollingOrderCode: orderCode,
+                    //   equal: String(item.data.orderCode) === String(orderCode)
+                    // });
+                    if (String(item.data.orderCode) === String(orderCode)) {
+                      console.log('[PAYOS] Payment confirmed for orderCode:', orderCode);
+                      paymentDone = true;
+                    }
+                  }
+                }
+              });
+            }
+            if (paymentDone) {
+              clearInterval(intervalId);
+              handleConfirmPayment(selectedPaymentType);
+            } else if (pollingCount >= maxPolling) {
+              clearInterval(intervalId);
+              toast.error("Không tìm thấy giao dịch thanh toán. Vui lòng thử lại hoặc liên hệ hỗ trợ.");
+            }
+          }, 1500);
+        }}
+      />
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
     </div>
   );
 };

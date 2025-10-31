@@ -89,7 +89,15 @@ const TransactionHistoryPage = () => {
                     <TableCell>{transaction.gateway}</TableCell>
                     <TableCell>{convertDateTime(transaction.transactionDate)}</TableCell>
                     <TableCell>{transaction.accountNumber}</TableCell>
+<<<<<<< Updated upstream
                     <TableCell>{transaction.transferAmount.toLocaleString()} VND</TableCell>
+=======
+<<<<<<< Updated upstream
+                    <TableCell>{transaction.transferAmount.toLocaleString()} VND</TableCell>
+=======
+                    <TableCell>{transaction?.transferAmount?.toLocaleString()} VND</TableCell>
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
                     <TableCell>{transaction.content}</TableCell>
                     <TableCell>{transaction.referenceCode}</TableCell>
                     <TableCell style={{ color: transaction.transferType === "in" ? "green" : "red" }}>
