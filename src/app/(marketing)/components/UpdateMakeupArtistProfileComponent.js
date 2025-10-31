@@ -23,17 +23,34 @@ const defaultProfile = {
   certificates: []
 };
 
-const UpdateMakeupArtistProfileComponent = ({ currentUser }) => {
+const UpdateMakeupArtistProfileComponent = ({ currentUser, onSubmit, isUpgradeRequest }) => {
+  // Kiểm tra nếu là trang admin thì chỉ cho view
+  const isAdminView = typeof window !== 'undefined' && window.location.pathname.includes('admin');
+  // Validate các trường bắt buộc ngân hàng
+  const validateBankInfo = () => {
+    const errors = {};
+    if (!profile.bankInfo.bankName) errors.bankName = "Ngân hàng là bắt buộc.";
+    if (!profile.bankInfo.bankAccount) errors.bankAccount = "Số tài khoản là bắt buộc.";
+    if (!profile.bankInfo.accountHolder) errors.accountHolder = "Chủ tài khoản là bắt buộc.";
+    return errors;
+  };
+
+  const [bankErrors, setBankErrors] = useState({});
   const [profile, setProfile] = useState(defaultProfile);
   const [loading, setLoading] = useState(false);
 
   // Load profile khi mount
+  const [requestStatus, setRequestStatus] = useState(null);
+  const [requestReason, setRequestReason] = useState("");
+
   useEffect(() => {
     const fetchProfile = async () => {
       setLoading(true);
       try {
-        const res = await SendRequest("get", `/api/makeup-artists/${currentUser._id}`);
+        const res = await SendRequest("get", `/api/makeup-artists/request-profile/${currentUser.id}`);
+        // console.log("fetchProfile res", res);
         if (res.payload) {
+          // console.log("res.payload", res.payload);
           let wh = res.payload.workingHours || "08:00-18:00";
           let [start, end] = wh.split("-");
           setProfile({
@@ -43,15 +60,90 @@ const UpdateMakeupArtistProfileComponent = ({ currentUser }) => {
             workingHoursStart: start || "08:00",
             workingHoursEnd: end || "18:00"
           });
+        } else {
+          toast.error("Không tìm thấy hồ sơ chuyên gia!");
+          setProfile(defaultProfile);
         }
       } catch (e) {
         toast.error("Không thể tải hồ sơ!");
+        setProfile(defaultProfile);
       }
       setLoading(false);
     };
-    if (currentUser?._id) fetchProfile();
-  }, [currentUser]);
 
+    const fetchRequestStatus = async () => {
+      if (!currentUser?.email) return;
+      try {
+        const res = await fetch(`/api/request-add-MUA?email=${currentUser.email}`);
+        const data = await res.json();
+        const req = data.data?.find((item) => item.email === currentUser.email);
+        if (req) {
+          setRequestStatus(req.status);
+          setRequestReason(req.reason || "");
+        } else {
+          setRequestStatus(null);
+          setRequestReason("");
+        }
+      } catch {
+        setRequestStatus(null);
+        setRequestReason("");
+      }
+    };
+
+    if (currentUser?._id) {
+      // Nếu là makeup_artist hoặc đã có request thì fetch profile
+      if (currentUser.role === "makeup_artist") {
+        fetchProfile();
+      } else {
+        // Kiểm tra có request không
+        fetchRequestStatus().then(() => {
+          fetchProfile();
+        });
+      }
+    } else {
+      setProfile(defaultProfile);
+    }
+  }, [currentUser]);
+// Submit cập nhật
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const bankErrs = validateBankInfo();
+    setBankErrors(bankErrs);
+    if (Object.keys(bankErrs).length > 0) {
+      toast.error("Vui lòng điền đầy đủ thông tin ngân hàng.");
+      return;
+    }
+    setLoading(true);
+    // Đảm bảo workingHours luôn đúng định dạng
+    let wh = `${profile.workingHoursStart || "08:00"}-${profile.workingHoursEnd || "18:00"}`;
+    try {
+      // Cập nhật profile
+      const res = await SendRequest("put", "/api/makeup-artist-profiles", {
+        artistId: currentUser.id,
+        ...profile,
+        workingHours: wh
+      });
+      
+      if (res.success !== false) {
+        toast.success(res.message || "Cập nhật hồ sơ thành công!");
+        // Nếu là yêu cầu nâng cấp, gọi callback onSubmit
+        if (isUpgradeRequest && onSubmit) {
+          const profileData = {
+            ...profile,
+            workingHours: wh,
+            artistId: currentUser.id
+          };
+          await onSubmit(profileData);
+        }
+      } else {
+        toast.error(res.message || "Cập nhật hồ sơ thất bại!");
+      }
+    } catch (error) {
+      console.error("Error updating profile:", error);
+      toast.error("Cập nhật hồ sơ thất bại!");
+    }
+    setLoading(false);
+  };
   // Xử lý thay đổi input
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -137,52 +229,54 @@ const UpdateMakeupArtistProfileComponent = ({ currentUser }) => {
     setProfile((prev) => ({ ...prev, certificates: updated }));
   };
 
-  // Submit cập nhật
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    // Đảm bảo workingHours luôn đúng định dạng
-    let wh = `${profile.workingHoursStart || "08:00"}-${profile.workingHoursEnd || "18:00"}`;
-    try {
-      const res = await SendRequest("put", "/api/makeup-artist-profiles", {
-        artistId: currentUser._id,
-        ...profile,
-        workingHours: wh
-      });
-      if (res.success !== false) {
-        toast.success("Cập nhật hồ sơ thành công!");
-      } else {
-        toast.error(res.message || "Cập nhật thất bại!");
-      }
-    } catch {
-      toast.error("Cập nhật thất bại!");
-    }
-    setLoading(false);
-  };
+  
 
   return (
-    <form className="p-3" onSubmit={handleSubmit}>
+  <form className="p-3" onSubmit={handleSubmit}>
+    {isAdminView ? (
+      <div className="alert alert-info mb-3">
+        <b>Chế độ xem admin:</b> Bạn không thể chỉnh sửa.
+      </div>
+    ) : (
       <h4 className="mb-3">Cập nhật hồ sơ chuyên gia</h4>
-      <div className="row">
+    )}
+      {/* Nếu có request bị từ chối, hiển thị lý do */}
+      {requestStatus === "rejected" && (
+        <div className="alert alert-danger">
+          <b>Yêu cầu nâng cấp bị từ chối.</b> {requestReason && (<span>Lý do: {requestReason}</span>)}
+        </div>
+      )}
+  <div className="row">
         <div className="col-md-6 mb-2">
           <label>Tên</label>
-          <input className="form-control" name="name" value={profile.name} onChange={handleChange} required maxLength={100} />
+          <input className="form-control" name="name" value={profile.name} onChange={handleChange} required maxLength={100} disabled={isAdminView} />
         </div>
         <div className="col-md-6 mb-2">
-          <label>Ảnh đại diện (URL)</label>
-          <input className="form-control" name="avatar" value={profile.avatar} onChange={handleChange} />
+          <label>Ảnh đại diện</label>
+          {profile.avatar ? (
+            <img
+              src={profile.avatar}
+              alt="Avatar"
+              className="img-thumbnail"
+              style={{ maxWidth: '150px', maxHeight: '150px', objectFit: 'cover' }}
+            />
+          ) : (
+            <div className="border rounded bg-light d-flex align-items-center justify-content-center" style={{ width: '150px', height: '150px' }}>
+              <span className="text-muted">Chưa có ảnh</span>
+            </div>
+          )}
         </div>
         <div className="col-12 mb-2">
           <label>Bio</label>
-          <textarea className="form-control" name="bio" value={profile.bio} onChange={handleChange} maxLength={1000} />
+          <textarea className="form-control" name="bio" value={profile.bio} onChange={handleChange} maxLength={1000} disabled={isAdminView} />
         </div>
         <div className="col-md-4 mb-2">
           <label>Kinh nghiệm (năm)</label>
-          <input type="number" className="form-control" name="experienceYears" value={profile.experienceYears} onChange={handleChange} min={0} />
+          <input type="number" className="form-control" name="experienceYears" value={profile.experienceYears} onChange={handleChange} min={0} disabled={isAdminView} />
         </div>
         <div className="col-md-4 mb-2">
           <label>Kinh nghiệm (tháng)</label>
-          <input type="number" className="form-control" name="experienceMonths" value={profile.experienceMonths} onChange={handleChange} min={0} max={11} />
+          <input type="number" className="form-control" name="experienceMonths" value={profile.experienceMonths} onChange={handleChange} min={0} max={11} disabled={isAdminView} />
         </div>
         <div className="col-md-4 mb-2">
           <label>Giờ làm việc</label>
@@ -195,6 +289,7 @@ const UpdateMakeupArtistProfileComponent = ({ currentUser }) => {
               onChange={handleWorkingHoursChange}
               onBlur={handleWorkingHoursBlur}
               style={{ width: "50%" }}
+              disabled={isAdminView}
             />
             <span className="align-self-center">-</span>
             <input
@@ -205,12 +300,13 @@ const UpdateMakeupArtistProfileComponent = ({ currentUser }) => {
               onChange={handleWorkingHoursChange}
               onBlur={handleWorkingHoursBlur}
               style={{ width: "50%" }}
+              disabled={isAdminView}
             />
           </div>
         </div>
         <div className="col-md-6 mb-2">
           <label>Số điện thoại</label>
-          <input className="form-control" name="phone" value={profile.phone} onChange={handleChange} />
+          <input className="form-control" name="phone" value={profile.phone} onChange={handleChange} readOnly/>
         </div>
         <div className="col-md-6 mb-2">
           <label>Email</label>
@@ -222,27 +318,30 @@ const UpdateMakeupArtistProfileComponent = ({ currentUser }) => {
         </div>
         <div className="col-12 mb-2">
           <label>Địa chỉ</label>
-          <input className="form-control" name="address" value={profile.address} onChange={handleChange} />
+          <input className="form-control" name="address" value={profile.address} onChange={handleChange} disabled={isAdminView} />
         </div>
         <div className="col-md-4 mb-2">
-          <label>Ngân hàng</label>
-          <input className="form-control" name="bankName" value={profile.bankInfo.bankName} onChange={e => handleNestedChange(e, 'bankInfo')} />
+          <label>Ngân hàng <span className="text-danger">*</span></label>
+          <input className="form-control" name="bankName" value={profile.bankInfo.bankName} onChange={e => handleNestedChange(e, 'bankInfo')} required disabled={isAdminView} />
+          {bankErrors.bankName && <div className="text-danger small">{bankErrors.bankName}</div>}
         </div>
         <div className="col-md-4 mb-2">
-          <label>Số tài khoản</label>
-          <input className="form-control" name="bankAccount" value={profile.bankInfo.bankAccount} onChange={e => handleNestedChange(e, 'bankInfo')} />
+          <label>Số tài khoản <span className="text-danger">*</span></label>
+          <input className="form-control" name="bankAccount" value={profile.bankInfo.bankAccount} onChange={e => handleNestedChange(e, 'bankInfo')} required disabled={isAdminView} />
+          {bankErrors.bankAccount && <div className="text-danger small">{bankErrors.bankAccount}</div>}
         </div>
         <div className="col-md-4 mb-2">
-          <label>Chủ tài khoản</label>
-          <input className="form-control" name="accountHolder" value={profile.bankInfo.accountHolder} onChange={e => handleNestedChange(e, 'bankInfo')} />
+          <label>Chủ tài khoản <span className="text-danger">*</span></label>
+          <input className="form-control" name="accountHolder" value={profile.bankInfo.accountHolder} onChange={e => handleNestedChange(e, 'bankInfo')} required disabled={isAdminView} />
+          {bankErrors.accountHolder && <div className="text-danger small">{bankErrors.accountHolder}</div>}
         </div>
         <div className="col-md-6 mb-2">
           <label>Facebook</label>
-          <input className="form-control" name="facebook" value={profile.socialLinks.facebook} onChange={e => handleNestedChange(e, 'socialLinks')} />
+          <input className="form-control" name="facebook" value={profile.socialLinks.facebook} onChange={e => handleNestedChange(e, 'socialLinks')} disabled={isAdminView} />
         </div>
         <div className="col-md-6 mb-2">
           <label>Instagram</label>
-          <input className="form-control" name="instagram" value={profile.socialLinks.instagram} onChange={e => handleNestedChange(e, 'socialLinks')} />
+          <input className="form-control" name="instagram" value={profile.socialLinks.instagram} onChange={e => handleNestedChange(e, 'socialLinks')} disabled={isAdminView} />
         </div>
       </div>
       <hr />
@@ -250,37 +349,47 @@ const UpdateMakeupArtistProfileComponent = ({ currentUser }) => {
       {profile.portfolio.map((item, idx) => (
         <div className="row mb-2" key={idx}>
           <div className="col-md-5">
-            <input className="form-control" placeholder="URL ảnh" value={item.image} onChange={e => handlePortfolioChange(idx, 'image', e.target.value)} />
+            <input className="form-control" placeholder="URL ảnh" value={item.image} onChange={e => handlePortfolioChange(idx, 'image', e.target.value)} disabled={isAdminView} />
           </div>
           <div className="col-md-5">
-            <input className="form-control" placeholder="Mô tả" value={item.desc} onChange={e => handlePortfolioChange(idx, 'desc', e.target.value)} />
+            <input className="form-control" placeholder="Mô tả" value={item.desc} onChange={e => handlePortfolioChange(idx, 'desc', e.target.value)} disabled={isAdminView} />
           </div>
           <div className="col-md-2 d-flex align-items-center">
-            <button type="button" className="btn btn-danger btn-sm" onClick={() => handleRemovePortfolio(idx)}>Xóa</button>
+            {!isAdminView && (
+              <button type="button" className="btn btn-danger btn-sm" onClick={() => handleRemovePortfolio(idx)}>Xóa</button>
+            )}
           </div>
         </div>
       ))}
-      <button type="button" className="btn btn-outline-primary btn-sm mb-3" onClick={handleAddPortfolio}>+ Thêm ảnh</button>
+      {!isAdminView && (
+        <button type="button" className="btn btn-outline-primary btn-sm mb-3" onClick={handleAddPortfolio}>+ Thêm ảnh</button>
+      )}
       <hr />
       <h5>Chứng chỉ</h5>
       {profile.certificates.map((item, idx) => (
         <div className="row mb-2" key={idx}>
           <div className="col-md-6">
-            <input className="form-control" placeholder="Tên chứng chỉ" value={item.name} onChange={e => handleCertificateChange(idx, 'name', e.target.value)} />
+            <input className="form-control" placeholder="Tên chứng chỉ" value={item.name} onChange={e => handleCertificateChange(idx, 'name', e.target.value)} disabled={isAdminView} />
           </div>
           <div className="col-md-4">
-            <input className="form-control" placeholder="URL ảnh/PDF" value={item.image} onChange={e => handleCertificateChange(idx, 'image', e.target.value)} />
+            <input className="form-control" placeholder="URL ảnh/PDF" value={item.image} onChange={e => handleCertificateChange(idx, 'image', e.target.value)} disabled={isAdminView} />
           </div>
           <div className="col-md-2 d-flex align-items-center">
-            <button type="button" className="btn btn-danger btn-sm" onClick={() => handleRemoveCertificate(idx)}>Xóa</button>
+            {!isAdminView && (
+              <button type="button" className="btn btn-danger btn-sm" onClick={() => handleRemoveCertificate(idx)}>Xóa</button>
+            )}
           </div>
         </div>
       ))}
-      <button type="button" className="btn btn-outline-primary btn-sm mb-3" onClick={handleAddCertificate}>+ Thêm chứng chỉ</button>
+      {!isAdminView && (
+        <button type="button" className="btn btn-outline-primary btn-sm mb-3" onClick={handleAddCertificate}>+ Thêm chứng chỉ</button>
+      )}
       <hr />
-      <button className="btn btn-success" type="submit" disabled={loading}>
-        {loading ? "Đang lưu..." : "Lưu thay đổi"}
-      </button>
+      {!isAdminView && (
+        <button className="btn btn-success" type="submit" disabled={loading}>
+          {loading ? "Đang lưu..." : "Lưu thay đổi"}
+        </button>
+      )}
     </form>
   );
 };

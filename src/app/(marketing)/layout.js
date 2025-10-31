@@ -1,25 +1,51 @@
 "use client";
+import { useEffect } from "react";
 import Script from "next/script";
 import FooterComponent from "./components/FooterComponent";
 import HeaderComponent from "./components/HeaderComponent";
 import { useApp } from "../contexts/AppContext";
 import { usePathname } from "next/navigation";
-
+import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 const UserAppLayout = ({ children }) => {
   const { currentUser, loading } = useApp();
+  const { data: session, status } = useSession();
   const pathUrl = usePathname();
+  const router = useRouter();
 
   const linkNeedAuth = ["/trang-ca-nhan"];
   const linkNeedNotAuth = ["/quen-mat-khau", "/dang-nhap", "/dang-ky"];
 
-  if (!loading && Object.keys(currentUser).length === 0 && linkNeedAuth.includes(pathUrl)) {
-    window.location.href = "/dang-nhap";
-    return null; // Prevent rendering while redirecting
-  }
+  // Kiểm tra xác thực từ cả hai nguồn (NextAuth và hệ thống hiện tại)
+  const isLocalUserValid = currentUser && (currentUser.id || currentUser._id || currentUser.email);
+  const isAuthenticated = (!loading && (session?.user || isLocalUserValid)) || (status === "authenticated" && session?.user);
+  const isLoading = loading || status === "loading";
 
-  if (!loading && Object.keys(currentUser).length > 0 && linkNeedNotAuth.includes(pathUrl)) {
-    window.location.href = "/trang-ca-nhan";
-    return null; // Prevent rendering while redirecting
+  // Lấy role từ currentUser hoặc session
+  const userRole = currentUser?.role || session?.user?.role || null;
+
+  // Chuyển hướng phải nằm trong useEffect để tránh lỗi setState khi render
+
+  useEffect(() => {
+    if (!isLoading && !isAuthenticated && linkNeedAuth.includes(pathUrl)) {
+      router.push("/dang-nhap");
+    } else if (!isLoading && isAuthenticated && linkNeedNotAuth.includes(pathUrl)) {
+      if (userRole === "admin") {
+        router.push("/admin");
+      } else if (userRole === "makeup_artist") {
+        router.push("/makeup-artists");
+      } else {
+        window.location.href = "/";
+      }
+    }
+  }, [isLoading, isAuthenticated, pathUrl, userRole, router]);
+
+  // Trả về null khi đang chuyển hướng
+  if (
+    (!isLoading && !isAuthenticated && linkNeedAuth.includes(pathUrl)) ||
+    (!isLoading && isAuthenticated && linkNeedNotAuth.includes(pathUrl))
+  ) {
+    return null;
   }
 
   return (
