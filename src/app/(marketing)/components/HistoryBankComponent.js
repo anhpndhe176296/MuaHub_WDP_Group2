@@ -6,9 +6,9 @@ import { useCallback, useEffect, useState } from "react";
 import { Table } from "react-bootstrap";
 
 const STATUS_MAP = {
-  pending: { label: "Đang xử lý", className: "text-primary fw-bold" }, // 
-  completed: { label: "Đã chuyển khoản", className: "text-success fw-bold" }, 
-  failed: { label: "Thất bại", className: "text-danger fw-bold" } 
+  pending: { label: "Đang xử lý", className: "text-warning" },
+  completed: { label: "Đã chuyển khoản", className: "text-success" },
+  failed: { label: "Thất bại", className: "text-danger" }
 };
 
 const HistoryBankComponent = ({ currentUser }) => {
@@ -29,12 +29,12 @@ const HistoryBankComponent = ({ currentUser }) => {
 
   const fetchRefunds = useCallback(async () => {
     setLoading(true);
-    const res = await SendRequest("GET", "/api/refund", { userId: currentUser._id });
+    const res = await SendRequest("GET", "/api/refund", { userId: currentUser.id });
     if (res.payload) {
       setRefunds(res.payload);
     }
     setLoading(false);
-  }, [currentUser._id]);
+  }, [currentUser.id]);
 
   useEffect(() => {
     fetchRefunds();
@@ -87,7 +87,7 @@ const HistoryBankComponent = ({ currentUser }) => {
                   </td>
                   <td className="text-nowrap text-end">{formatCurrency(refund.totalAmount)}</td>
                   <td className="text-nowrap text-end">{refund.discount || "0"} %</td>
-                  <td className={`text-center ${statusInfo.className}`}>{statusInfo.label}</td>
+                  <td className={`text-center fw-bold ${statusInfo.className}`}>{statusInfo.label}</td>
                   <td className="text-nowrap text-center">{convertDateTime(refund.created_at)}</td>
                   <td className="text-nowrap text-center">
                     {refund.transactionDate ? convertDateTime(refund.transactionDate) : "-"}

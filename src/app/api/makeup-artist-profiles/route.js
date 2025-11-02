@@ -36,9 +36,16 @@ export async function POST(req) {
     const profilesCollection = db.collection(COLLECTION_NAME);
     const {
       artistId,
+      name,
+      avatar,
       bio,
       experienceYears,
+      experienceMonths,
       workingHours,
+      phone,
+      email,
+      address,
+      bankInfo, // { bankName, bankAccount, accountHolder }
       socialLinks,
       portfolio,
       certificates
@@ -53,9 +60,16 @@ export async function POST(req) {
     }
     const newProfile = {
       artistId: getObjectId(artistId),
+      name: name || "",
+      avatar: avatar || "",
       bio: bio || "",
       experienceYears: experienceYears || 0,
+      experienceMonths: experienceMonths || 0,
       workingHours: workingHours || "",
+      phone: phone || "",
+      email: email || "",
+      address: address || "",
+      bankInfo: bankInfo || {},
       socialLinks: socialLinks || {},
       portfolio: portfolio || [],
       certificates: certificates || [],
@@ -75,6 +89,8 @@ export async function PUT(req) {
     const client = await clientPromise;
     const db = client.db(DB_NAME);
     const profilesCollection = db.collection(COLLECTION_NAME);
+    const usersCollection = db.collection("users");
+    const MUARequestsCollection = db.collection("MUA_requests");
     const {
       artistId,
       name,
@@ -117,6 +133,17 @@ export async function PUT(req) {
       if (!bankInfo.bankName || !bankInfo.accountHolder || !/^[0-9]{6,20}$/.test(bankInfo.bankAccount)) {
         return NextResponse.json({ success: false, message: "Thông tin ngân hàng không hợp lệ" }, { status: 400 });
       }
+    }
+    // Nếu artistId là user thường thì kiểm tra MUA_requests
+    const user = await usersCollection.findOne({ _id: getObjectId(artistId) });
+    //console.log("[DEBUG] PUT profile - artistId:", artistId, "user:", user);
+    if (user && user.role === "user") {
+      // Nếu có request bị từ chối thì update lại thành pending
+      const updateResult = await MUARequestsCollection.updateMany(
+        { userId: artistId, status: { $in: ["rejected", "reject"] } },
+        { $set: { status: "pending", reason: "" } }
+      );
+     // console.log("[DEBUG] Update MUA_requests result:", updateResult);
     }
     // Chuẩn bị dữ liệu cập nhật
     const updateFields = {};

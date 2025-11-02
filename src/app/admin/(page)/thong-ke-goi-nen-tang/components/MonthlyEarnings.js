@@ -3,8 +3,8 @@ import dynamic from "next/dynamic";
 import { useTheme } from "@mui/material/styles";
 import { Stack, Typography, Avatar, Fab, CircularProgress, Box } from "@mui/material";
 import { IconArrowDownRight, IconCurrencyDollar } from "@tabler/icons-react";
-import DashboardCard from "@quanlysanbong/app/chu-san/components/shared/DashboardCard";
-import SendRequest from "@quanlysanbong/utils/SendRequest";
+import DashboardCard from "@muahub/app/admin/components/shared/DashboardCard";
+import SendRequest from "@muahub/utils/SendRequest";
 
 const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
 

@@ -27,7 +27,15 @@ const ProductPerformance = () => {
     setLoading(true);
     try {
       const res = await SendRequest("GET", "/api/orders", {
+<<<<<<< Updated upstream
         ownerId: currentUser.role === ROLE_MANAGER.SALE ? currentUser._id : ""
+=======
+<<<<<<< Updated upstream
+        ownerId: currentUser.role === ROLE_MANAGER.SALE ? currentUser._id : ""
+=======
+        ownerId: currentUser.role === ROLE_MANAGER.MUA ? currentUser.id : ""
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
       });
       if (res.payload) {
         // Tính số lần đặt của từng dịch vụ makeup

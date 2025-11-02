@@ -36,7 +36,20 @@ const RevenueDetailPage = () => {
 <<<<<<< Updated upstream
         ownerId: currentUser.role === ROLE_MANAGER.MUA ? currentUser._id : ""
 =======
+<<<<<<< Updated upstream
         ownerId: currentUser.role === ROLE_MANAGER.SALE ? currentUser._id : ""
+>>>>>>> Stashed changes
+=======
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+        ownerId: currentUser.role === ROLE_MANAGER.MUA ? currentUser._id : ""
+=======
+        ownerId: currentUser.role === ROLE_MANAGER.SALE ? currentUser._id : ""
+>>>>>>> Stashed changes
+=======
+        ownerId: currentUser.role === ROLE_MANAGER.MUA ? currentUser.id : ""
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
 >>>>>>> Stashed changes
       });
       if (res.payload) {

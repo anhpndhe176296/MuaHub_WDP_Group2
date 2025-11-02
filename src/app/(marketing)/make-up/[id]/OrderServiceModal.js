@@ -9,7 +9,7 @@ import Link from "next/link";
 import { v4 as uuidv4 } from "uuid";
 import FormMakeupLocation from "./FormMakeupLocation";
 
-const OrderServiceModal = ({ open, onClose, serviceData }) => {
+const OrderServiceModal = ({ open, onClose, serviceData, currentUser }) => {
 
   const [selectedDate, setSelectedDate] = useState("");
   const [selectedField, setSelectedField] = useState("");
@@ -47,7 +47,7 @@ const OrderServiceModal = ({ open, onClose, serviceData }) => {
   //     fetchOrderData();
   //   }
   // }, [serviceData]);
-
+console.log('serviceData in OrderServiceModal:', currentUser);
   useEffect(() => {
     if (open) {
       // reset all
@@ -72,7 +72,8 @@ const OrderServiceModal = ({ open, onClose, serviceData }) => {
           body: JSON.stringify({
             serviceId: serviceData._id,
             date: selectedDate,
-            slots: selectedFieldSlot
+            slots: selectedFieldSlot,
+            userId: currentUser?.id || currentUser?._id
           })
         });
       }
@@ -192,7 +193,8 @@ const OrderServiceModal = ({ open, onClose, serviceData }) => {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             serviceId: serviceData._id,
-            date: selectedDate
+            date: selectedDate,
+            userId: currentUser?.id || currentUser?._id
           })
         });
         const lockData = await lockRes.json();
@@ -229,7 +231,8 @@ const OrderServiceModal = ({ open, onClose, serviceData }) => {
           body: JSON.stringify({
             serviceId: serviceData._id,
             date: selectedDate,
-            slots: selectedFieldSlot
+            slots: selectedFieldSlot,
+            userId: currentUser?.id || currentUser?._id
           })
         });
       } catch (error) {
@@ -247,7 +250,8 @@ const OrderServiceModal = ({ open, onClose, serviceData }) => {
             serviceId: serviceData._id,
             date: selectedDate,
             time: slot.time,
-            fieldSlot: slot.fieldIndex
+            fieldSlot: slot.fieldIndex,
+            userId: currentUser?.id || currentUser?._id
           })
         });
         const lockData = await lockRes.json();
@@ -267,7 +271,8 @@ const OrderServiceModal = ({ open, onClose, serviceData }) => {
             serviceId: serviceData._id,
             date: selectedDate,
             time: slot.time,
-            fieldSlot: slot.fieldIndex
+            fieldSlot: slot.fieldIndex,
+            userId: currentUser?.id || currentUser?._id
           })
         });
         const checkData = await checkRes.json();
@@ -371,7 +376,8 @@ const OrderServiceModal = ({ open, onClose, serviceData }) => {
             body: JSON.stringify({
               serviceId: serviceData._id,
               date: selectedDate,
-              slots: [{ time, fieldIndex }]
+              slots: [{ time, fieldIndex }],
+              userId: currentUser?.id || currentUser?._id
             })
           });
           
@@ -397,7 +403,8 @@ const OrderServiceModal = ({ open, onClose, serviceData }) => {
           serviceId: serviceData._id,
           date: selectedDate,
           time,
-          fieldSlot: fieldIndex
+          fieldSlot: fieldIndex,
+          userId: currentUser?.id || currentUser?._id
         })
       });
       const checkData = await checkRes.json();
@@ -415,7 +422,8 @@ const OrderServiceModal = ({ open, onClose, serviceData }) => {
           serviceId: serviceData._id,
           date: selectedDate,
           time,
-          fieldSlot: fieldIndex
+          fieldSlot: fieldIndex,
+          userId: currentUser?.id || currentUser?._id
         })
       });
       const lockData = await lockRes.json();

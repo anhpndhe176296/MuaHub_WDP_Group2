@@ -4,14 +4,31 @@ import Link from "next/link";
 import CustomTextField from "@muahub/app/makeup-artists/components/forms/theme-elements/CustomTextField";
 import SendRequest from "@muahub/utils/SendRequest";
 import toast from "react-hot-toast";
+<<<<<<< Updated upstream
 
+=======
+<<<<<<< Updated upstream
+
+=======
+// import Button from '@mui/material/Button';
+import { useRouter } from "next/navigation";
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
 const AuthLogin = ({ title, subtitle, subtext }) => {
   const [account, setAccount] = useState({
     email: "",
     password: ""
   });
   const [loading, setLoading] = useState(false);
+<<<<<<< Updated upstream
 
+=======
+<<<<<<< Updated upstream
+
+=======
+  const router = useRouter();
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
   const validate = () => {
     if (!account.email) {
       toast.error("Vui lòng nhập email.");
@@ -40,7 +57,15 @@ const AuthLogin = ({ title, subtitle, subtext }) => {
       if (res.payload) {
         toast.success("Đăng nhập thành công");
         localStorage.setItem("token", res.payload.token);
+<<<<<<< Updated upstream
         window.location.href = "/makeup-artists";
+=======
+<<<<<<< Updated upstream
+        window.location.href = "/makeup-artists";
+=======
+        router.push("/makeup-artists");
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
       } else {
         toast.error("Đăng nhập thất bại, vui lòng kiểm tra thông tin của bạn.");
       }

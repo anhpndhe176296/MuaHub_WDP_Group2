@@ -1,4 +1,5 @@
 "use client";
+import { useEffect } from "react";
 import Script from "next/script";
 import FooterComponent from "./components/FooterComponent";
 import HeaderComponent from "./components/HeaderComponent";
@@ -16,18 +17,34 @@ const UserAppLayout = ({ children }) => {
   const linkNeedNotAuth = ["/quen-mat-khau", "/dang-nhap", "/dang-ky"];
 
   // Kiểm tra xác thực từ cả hai nguồn (NextAuth và hệ thống hiện tại)
-  const isAuthenticated = (!loading && Object.keys(currentUser).length > 0) || (status === "authenticated" && session);
+  const isLocalUserValid = currentUser && (currentUser.id || currentUser._id || currentUser.email);
+  const isAuthenticated = (!loading && (session?.user || isLocalUserValid)) || (status === "authenticated" && session?.user);
   const isLoading = loading || status === "loading";
 
-  // Chuyển hướng nếu chưa đăng nhập và cố truy cập trang cần xác thực
-  if (!isLoading && !isAuthenticated && linkNeedAuth.includes(pathUrl)) {
-    router.push("/dang-nhap");
-    return null;
-  }
+  // Lấy role từ currentUser hoặc session
+  const userRole = currentUser?.role || session?.user?.role || null;
 
-  // Chuyển hướng nếu đã đăng nhập và cố truy cập trang đăng nhập/đăng ký
-  if (!isLoading && isAuthenticated && linkNeedNotAuth.includes(pathUrl)) {
-    router.push("/trang-ca-nhan");
+  // Chuyển hướng phải nằm trong useEffect để tránh lỗi setState khi render
+
+  useEffect(() => {
+    if (!isLoading && !isAuthenticated && linkNeedAuth.includes(pathUrl)) {
+      router.push("/dang-nhap");
+    } else if (!isLoading && isAuthenticated && linkNeedNotAuth.includes(pathUrl)) {
+      if (userRole === "admin") {
+        router.push("/admin");
+      } else if (userRole === "makeup_artist") {
+        router.push("/makeup-artists");
+      } else {
+        window.location.href = "/";
+      }
+    }
+  }, [isLoading, isAuthenticated, pathUrl, userRole, router]);
+
+  // Trả về null khi đang chuyển hướng
+  if (
+    (!isLoading && !isAuthenticated && linkNeedAuth.includes(pathUrl)) ||
+    (!isLoading && isAuthenticated && linkNeedNotAuth.includes(pathUrl))
+  ) {
     return null;
   }
 
