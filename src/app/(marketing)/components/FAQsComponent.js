@@ -36,7 +36,23 @@ const FAQsComponent = () => {
     }
   ];
 
-  return (
+  
+    <div
+      className="container-fluid faq-section pb-5 wow fadeInUp"
+      data-wow-delay="0.2s"
+      style={{
+        background: "linear-gradient(180deg, rgba(255,245,248,1) 0%, rgba(255,255,255,1) 100%)"
+      }}
+    >
+      <div className="container pb-5 overflow-hidden">
+        <div className="text-center mx-auto pb-5" style={{ maxWidth: "800px" }}>
+          <h4 style={{ color: "#ff86a8" }}>Câu Hỏi Thường Gặp</h4>
+          <h1 className="display-5 mb-4" style={{ color: "#333" }}>
+            Giải Đáp Những Thắc Mắc Của Bạn
+          </h1>
+          <p className="mb-0" style={{ color: "#666" }}>
+            Chúng tôi đã tổng hợp những câu hỏi phổ biến nhất để giúp bạn hiểu rõ hơn về hệ thống đặt lịch
+            và các dịch vụ chúng tôi cung cấp.
     <div className="container-fluid faq-section pb-5 wow fadeInUp" data-wow-delay="0.2s" style={{ background: 'rgba(248,187,208,0.03)' }}>
       <div className="container pb-5 overflow-hidden">
         <div className="text-center mx-auto pb-5" style={{ maxWidth: "800px" }}>
@@ -49,18 +65,53 @@ const FAQsComponent = () => {
         </div>
         <div className="row g-5 align-items-center">
           <div className="col-lg-6 wow fadeInLeft" data-wow-delay="0.2s">
+
+            <Accordion
+              defaultActiveKey="0"
+              className="bg-white rounded-4 p-3 shadow-sm border border-1"
+              style={{ borderColor: "rgba(255,170,190,0.4)" }}
+            >
+              {faqs.map((faq, index) => (
+                <Accordion.Item eventKey={String(index)} key={index}>
+                  <Accordion.Header>
+                    <span style={{ color: "#ff7299", fontWeight: "500" }}>{faq.question}</span>
+                  </Accordion.Header>
+                  <Accordion.Body
+                    style={{
+                      backgroundColor: "#fff8fa",
+                      color: "#555",
+                      borderLeft: "3px solid rgba(255,170,190,0.3)"
+                    }}
+                  >
+                    {faq.answer}
+                  /Accordio
             <Accordion defaultActiveKey="0" className="bg-white rounded-4 p-3 shadow-sm">
               {faqs.map((faq, index) => (
                 <Accordion.Item eventKey={String(index)} key={index}>
                   <Accordion.Header>{faq.question}</Accordion.Header>
-                  <Accordion.Body>{faq.answer}</Accordion.Body>
+                  <Accordion.Body>{faq.answer}</Accordi
                 </Accordion.Item>
               ))}
             </Accordion>
           </div>
           <div className="col-lg-6 wow fadeInRight" data-wow-delay="0.2s">
+
+            <div
+              className="rounded-4 overflow-hidden"
+              style={{
+                backgroundColor: "rgba(255,182,193,0.1)",
+                border: "2px solid rgba(255,182,193,0.25)"
+              }}
+            >
+              <img
+                src="img/ab3.jpg"
+                className="img-fluid w-100"
+                alt="FAQ Illustration"
+                style={{ filter: "brightness(1.07) saturate(1.05)" }}
+              />
             <div className="rounded-4 overflow-hidden" style={{ backgroundColor: "rgba(248,187,208,0.12)" }}>
               <img src="img/ab3.jpg" className="img-fluid w-100" alt="FAQ Illustration" />
+
             </div>
           </div>
         </div>
