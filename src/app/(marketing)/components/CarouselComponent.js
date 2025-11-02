@@ -28,10 +28,9 @@ const CarouselComponent = ({ pathUrl }) => {
   const [banners, setBanners] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  // Fetch banners from API
   useEffect(() => {
     if (pathUrl !== "/") return;
-    // Luôn dùng ảnh local từ public/img để đảm bảo hiển thị đúng theo yêu cầu
+    
     setLoading(true);
     try {
       setBanners(getDefaultBanners());
@@ -54,7 +53,7 @@ const CarouselComponent = ({ pathUrl }) => {
     {
       imageUrl: "/img/carousel2.jpg",
       title: "Chuyên Gia Makeup Tận Tâm",
-      description: "Đa dạng phong cách: dự tiệc, cô dâu, cá nhân… Bạn chọn – chúng tôi thực hiện."
+      description: "Đa dạng phong cách: dự tiệc, cô dâu, cá nhân...Bạn chọn – chúng tôi thực hiện."
     }
   ];
 
@@ -79,7 +78,7 @@ const CarouselComponent = ({ pathUrl }) => {
         </div>
       );
     }
-    // Breadcrumb mặc định cho các trang khác
+    
     let NameService = LinkName.find((item) => item.path === pathUrl)?.name || "";
     let parentPath = null;
     if (pathUrl.includes("/make-up/")) {
