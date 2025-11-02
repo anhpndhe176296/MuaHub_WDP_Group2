@@ -5,7 +5,7 @@ const OurOfferComponent = () => {
         <div className="text-center mx-auto pb-5 wow fadeInUp" data-wow-delay="0.2s" style={{ maxWidth: "800px" }}>
           <h4 style={{ color: "#ff5c95ff", fontWeight: 600 }}>Lợi Ích Dành Cho Chuyên Viên Makeup</h4>
           <h1 className="display-5 mb-4">Tăng Lịch – Quản Lý Dễ Dàng</h1>
-          <p className="mb-0">Nhận khách đều đặn, quản lý lịch thông minh, thanh toán nhanh gọn trên một nền tảng.</p>
+          <p className="mb-0">Nhận khách đều đặn, quản lý lịch thông minh, thanh toán nhanh gọn trên một nền tảng</p>
         </div>
         <div className="row g-5 align-items-center">
           <div className="col-xl-5 wow fadeInLeft" data-wow-delay="0.2s">
