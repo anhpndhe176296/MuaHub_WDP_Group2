@@ -3,7 +3,7 @@ import { MAIN_URL_APP } from "@muahub/constants/MainContent";
 const META_DATA = {
   TITLE: "MuaHub - Đặt lịch Makeup",
   DESCRIPTION:
-    "MuaHub là nền tảng đặt lịch makeup nhanh chóng và tiện lợi. Tìm chuyên gia trang điểm phù hợp và đặt lịch theo nhu cầu của bạn.",
+    "MuaHub là nền tảng đặt lịch makeup nhanh chóng và tiện lợi. Tìm chuyên gia trang điểm phù hợp và đặt lịch theo nhu cầu của bạn",
   APPLICATION_NAME: "MuaHub",
   GENERATOR: "NextJS",
   ROBOTS: "index, follow",
