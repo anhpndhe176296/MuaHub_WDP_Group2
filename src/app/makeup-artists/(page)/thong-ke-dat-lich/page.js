@@ -22,11 +22,7 @@ import PageContainer from "../../components/container/PageContainer";
 import { useApp } from "@muahub/app/contexts/AppContext";
 import { convertDate, convertDateTime } from "@muahub/utils/Main";
 import { ROLE_MANAGER, ROLE_MANAGER_TEXT } from "@muahub/constants/System";
-<<<<<<< Updated upstream
 import MUAsOverview from "../../components/dashboard/MUAsOverview";
-=======
-import SalesOverview from "../../components/dashboard/SalesOverview";
->>>>>>> Stashed changes
 import MonthlyEarnings from "../../components/dashboard/MonthlyEarnings";
 import RecentNotifies from "../../components/dashboard/RecentTransactions";
 import ProductPerformance from "../../components/dashboard/ProductPerformance";
@@ -41,11 +37,7 @@ const BookingHistoryPage = () => {
         <Box>
           <Grid container spacing={3}>
             <Grid item xs={12} lg={8}>
-<<<<<<< Updated upstream
               <MUAsOverview />
-=======
-              <SalesOverview />
->>>>>>> Stashed changes
             </Grid>
             <Grid item xs={12} lg={4}>
               <Grid container spacing={3}>
