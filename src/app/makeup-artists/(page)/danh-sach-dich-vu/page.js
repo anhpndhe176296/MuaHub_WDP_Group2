@@ -20,11 +20,7 @@ import { useApp } from "@muahub/app/contexts/AppContext";
 import { ROLE_MANAGER } from "@muahub/constants/System";
 import AddServiceModal from "./components/modalThemDichVu";
 import EditServiceModal from "./components/modalSuaDichVu";
-<<<<<<< Updated upstream
-
-=======
 import toast from "react-hot-toast";
->>>>>>> Stashed changes
 const ServiceListPage = () => {
   const { currentUser } = useApp();
   const [services, setServices] = useState([]);
@@ -38,18 +34,8 @@ const ServiceListPage = () => {
   const fetchData = useCallback(async () => {
     setLoading(true);
     try {
-<<<<<<< Updated upstream
-      const res = await SendRequest("GET", "/api/services", {
-        ownerId: currentUser.role === ROLE_MANAGER.SALE ? currentUser._id : ""
-=======
-<<<<<<< Updated upstream
-      const res = await SendRequest("GET", "/api/services", {
-        ownerId: currentUser.role === ROLE_MANAGER.SALE ? currentUser._id : ""
-=======
       const res = await SendRequest("GET", "/api/services/MUA", {
         ownerId: currentUser.role === ROLE_MANAGER.MUA ? currentUser.id : ""
->>>>>>> Stashed changes
->>>>>>> Stashed changes
       });
       if (res.payload) {
         setServices(res.payload);
@@ -220,7 +206,7 @@ const ServiceListPage = () => {
                     <strong>Loại dịch vụ makeup khả dụng:</strong>
                   </Typography>
                   <ul style={{ marginBottom: 0 }}>
-                    {Object.values(service.packages)
+                    {Object.values(service?.packages || {})
                       .filter((field) => field.isAvailable)
                       .map((field, index) => (
                         <li key={index}>
@@ -248,26 +234,6 @@ const ServiceListPage = () => {
                     </Button>
                     <Button
                       variant="outlined"
-<<<<<<< Updated upstream
-                      color="error"
-                      size="small"
-                      onClick={async () => {
-                        if (!window.confirm("Bạn chắc chắn muốn xóa dịch vụ này?")) return;
-                        try {
-                          const res = await SendRequest("DELETE", "/api/services", { id: service._id });
-                          if (res?.success) {
-                            toast.success("Xóa dịch vụ thành công");
-                            fetchData();
-                          } else {
-                            toast.error(res?.error || "Xóa thất bại");
-                          }
-                        } catch (e) {
-                          toast.error("Có lỗi xảy ra khi xóa");
-                        }
-                      }}
-                    >
-                      Xóa
-=======
                       color={service.active ? "error" : "success"}
                       size="small"
                       onClick={async () => {
@@ -299,7 +265,6 @@ const ServiceListPage = () => {
                       }}
                     >
                       {service.active ? "Ẩn" : "Hiện"}
->>>>>>> Stashed changes
                     </Button>
                   </Box>
                 </CardContent>

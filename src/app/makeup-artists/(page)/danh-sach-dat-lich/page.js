@@ -35,26 +35,8 @@ const BookingHistoryPage = () => {
   const fetchData = useCallback(async () => {
     setLoading(true);
     try {
-<<<<<<< Updated upstream
       const res = await SendRequest("GET", "/api/orders/makeup-artists", {
-<<<<<<< Updated upstream
-        ownerId: currentUser.role === ROLE_MANAGER.MUA ? currentUser._id : ""
-<<<<<<< Updated upstream
-=======
-<<<<<<< Updated upstream
-=======
->>>>>>> Stashed changes
-=======
-      const res = await SendRequest("GET", "/api/orders", {
-        ownerId: currentUser.role === ROLE_MANAGER.SALE ? currentUser._id : ""
->>>>>>> Stashed changes
-<<<<<<< Updated upstream
-=======
-=======
         ownerId: currentUser.role === ROLE_MANAGER.MUA ? currentUser.id : ""
->>>>>>> Stashed changes
->>>>>>> Stashed changes
->>>>>>> Stashed changes
       });
       if (res.payload) {
         setBookings(res.payload);
@@ -85,7 +67,6 @@ const BookingHistoryPage = () => {
     setCurrentPage(value);
   };
 
-<<<<<<< Updated upstream
   const handleStatusChange = async (bookingId, newStatus) => {
     try {
       const res = await SendRequest("PUT", "/api/orders", {
@@ -223,9 +204,18 @@ const BookingHistoryPage = () => {
       );
     }
   };
-
-=======
->>>>>>> Stashed changes
+if (orderId && filteredBookings.length === 0) {
+  return (
+    <PageContainer title="Danh sách đặt dịch vụ makeup" description="Danh sách các dịch vụ makeup bạn đã đặt">
+      <Box display="flex" justifyContent="center" alignItems="center" height="50vh">
+        <Typography color="info.main" variant="h6">Đã được xử lý</Typography>
+        <Button variant="contained" color="secondary" onClick={() => router.push('/makeup-artists/danh-sach-dat-lich')} sx={{ ml: 2 }}>
+            Quay lại
+          </Button>
+      </Box>
+    </PageContainer>
+  );
+}
   return (
   <PageContainer title="Danh sách đặt dịch vụ makeup" description="Danh sách các dịch vụ makeup bạn đã đặt">
       <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
@@ -260,10 +250,7 @@ const BookingHistoryPage = () => {
                 <TableCell>Người đặt</TableCell>
                 <TableCell>Thông tin</TableCell>
                 <TableCell>Giờ đặt</TableCell>
-<<<<<<< Updated upstream
                 <TableCell>Thao tác</TableCell>
-=======
->>>>>>> Stashed changes
               </TableRow>
             </TableHead>
             <TableBody>
@@ -328,16 +315,11 @@ const BookingHistoryPage = () => {
                   </TableCell>
                   <TableCell>{booking.deposit.toLocaleString()} VND</TableCell>
                   <TableCell>{booking.remaining.toLocaleString()} VND</TableCell>
-<<<<<<< Updated upstream
                   <TableCell>
                     {booking.status === "confirmed" && <Typography color="success.main">Đã xác nhận</Typography>}
                     {booking.status === "pending" && <Typography color="warning.main">Chờ xác nhận cọc</Typography>}
                     {booking.status === "deposit_confirmed" && <Typography color="info.main">Đã xác nhận cọc</Typography>}
                     {booking.status === "cancelled" && <Typography color="error">Đã hủy</Typography>}
-=======
-                  <TableCell style={{ color: booking.status === "confirmed" ? "green" : "red" }}>
-                    {booking.status === "confirmed" ? "Đã xác nhận" : "Chưa xác nhận"}
->>>>>>> Stashed changes
                   </TableCell>
                   <TableCell>{booking.user.name}</TableCell>
                   <TableCell>
@@ -346,10 +328,7 @@ const BookingHistoryPage = () => {
                     {booking.user.phone}
                   </TableCell>
                   <TableCell>{convertDateTime(booking.created_at)}</TableCell>
-<<<<<<< Updated upstream
                   <TableCell>{renderActionButtons(booking)}</TableCell>
-=======
->>>>>>> Stashed changes
                 </TableRow>
               ))}
             </TableBody>
