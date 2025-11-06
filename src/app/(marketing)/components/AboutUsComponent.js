@@ -40,7 +40,7 @@ const AboutUsComponent = () => {
                   <i className="fas fa-calendar-check fa-3x me-3 mb-2" style={{ color: "#ff5c95ff" }}></i>
                   <div>
                     <h5 className="fw-semibold mb-1">Kinh Nghiệm Uy Tín</h5>
-                    <p className="text-muted mb-0">Nhiều năm phục vụ hàng nghìn lịch makeup</p>
+                    <p className="text-muted mb-0">Nhiều năm phục vụ hàng nghìn lịch makeup.</p>
                   </div>
                 </div>
               </div>
