@@ -3,23 +3,17 @@ import {
   IconChartBar,
   IconHistory,
   IconListCheck,
-<<<<<<< Updated upstream
-  IconCalendarEvent,
-  IconSoccerField,
-  IconPlus,
-  IconUser,
-=======
   // IconCalendarEvent,
   // IconSoccerField,
   // IconPlus,
   // IconUser,
->>>>>>> Stashed changes
   IconUsers,
   IconMessage,
   // thêm icon danh sách chuyên viên align-box-left-bottom
   IconAlignBoxLeftBottom,
   IconMoneybag,
-  IconSettings
+  IconSettings,
+  IconCalendarEvent
 } from "@tabler/icons-react";
 import { uniqueId } from "lodash";
 
@@ -40,15 +34,12 @@ const Menuitems = [
     icon: IconChartBar,
     href: "/admin/doanh-thu"
   },
-<<<<<<< Updated upstream
-=======
     {
     id: uniqueId(),
     title: "Gói nền tảng",
     icon: IconMoneybag,
     href: "/admin/thong-ke-goi-nen-tang"
   },
->>>>>>> Stashed changes
   {
     id: uniqueId(),
     title: "Lịch sử rút tiền",
@@ -78,6 +69,12 @@ const Menuitems = [
     icon: IconListCheck,
     href: "/admin/lich-su-dat-lich"
   },
+  {
+      id: uniqueId(),
+      title: "Trạng thái đặt lịch",
+      icon: IconCalendarEvent,
+      href: "/admin/timeline-dich-vu"
+    },
   {
     navlabel: true,
     subheader: "Quản lý người dùng",

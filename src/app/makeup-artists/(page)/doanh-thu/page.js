@@ -16,10 +16,7 @@ import {
 } from "@mui/material";
 import SendRequest from "@muahub/utils/SendRequest";
 import PageContainer from "../../components/container/PageContainer";
-<<<<<<< Updated upstream
 import MUAsOverview from "./MUAsOverview";
-=======
->>>>>>> Stashed changes
 import { useApp } from "@muahub/app/contexts/AppContext";
 import { convertDate } from "@muahub/utils/Main";
 import { ROLE_MANAGER } from "@muahub/constants/System";
@@ -33,24 +30,7 @@ const RevenueDetailPage = () => {
     setLoading(true);
     try {
       const res = await SendRequest("GET", "/api/orders/revenue", {
-<<<<<<< Updated upstream
-        ownerId: currentUser.role === ROLE_MANAGER.MUA ? currentUser._id : ""
-=======
-<<<<<<< Updated upstream
-        ownerId: currentUser.role === ROLE_MANAGER.SALE ? currentUser._id : ""
->>>>>>> Stashed changes
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-        ownerId: currentUser.role === ROLE_MANAGER.MUA ? currentUser._id : ""
-=======
-        ownerId: currentUser.role === ROLE_MANAGER.SALE ? currentUser._id : ""
->>>>>>> Stashed changes
-=======
         ownerId: currentUser.role === ROLE_MANAGER.MUA ? currentUser.id : ""
->>>>>>> Stashed changes
->>>>>>> Stashed changes
->>>>>>> Stashed changes
       });
       if (res.payload) {
         setRevenue(res.payload);
@@ -73,11 +53,8 @@ const RevenueDetailPage = () => {
 
   return (
     <PageContainer title="Chi tiết doanh thu" description="Chi tiết doanh thu theo ngày">
-<<<<<<< Updated upstream
       {/* Weekly booking overview chart */}
       <MUAsOverview />
-=======
->>>>>>> Stashed changes
       <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
         <Typography variant="h4">Chi tiết doanh thu</Typography>
         <Button variant="contained" color="primary" onClick={handleReload}>

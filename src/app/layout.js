@@ -2,7 +2,7 @@
 import { Toaster } from "react-hot-toast";
 import { AppProvider } from "./contexts/AppContext";
 import { Providers } from "./providers";
-
+import 'bootstrap/dist/css/bootstrap.min.css';
 export default function RootLayout({ children }) {
   return (
     <html lang="en" suppressHydrationWarning>
@@ -18,11 +18,11 @@ export default function RootLayout({ children }) {
             {children}
             <Toaster />
             {/* loading full screen */}
-            <div className="loading position-fixed" id="loading-full-screen">
+            {/* <div className="loading position-fixed" id="loading-full-screen">
               <div className="spinner-border text-primary" role="status">
                 <span className="visually-hidden">Loading...</span>
               </div>
-            </div>
+            </div> */}
           </AppProvider>
         </Providers>
       </body>

@@ -2,25 +2,11 @@ export const WEB_NAME = "MuaHub";
 
 export const MAIN_URL_APP = "http://localhost:3000";
 
-<<<<<<< Updated upstream
-=======
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-export const VIDEO_LINK = "https://www.youtube.com/watch?v=Ig8IU9vsPo4";
-
-export const PHONE_NUMBER = "0352583897";
-
-export const EMAIL = "admin@ketsan.com";
-<<<<<<< Updated upstream
-=======
-=======
 export const VIDEO_LINK = "https://www.youtube.com/watch?v=6aeqqcG5ACw";
 
 export const PHONE_NUMBER = "0352583897";
 
 export const EMAIL = "muahubbooking@gmail.com";
->>>>>>> Stashed changes
->>>>>>> Stashed changes
 
 export const ADDRESS = "Hà Nội, Việt Nam";
 
