@@ -65,7 +65,7 @@ const SignInComponent = () => {
         toast.success("Đăng nhập thành công");
         localStorage.setItem("token", res.payload.token);
         await refreshUserData();
-        setPendingRedirect(true); 
+        setPendingRedirect(true); // Bắt đầu chờ role
       } else {
         toast.error("Đăng nhập thất bại, vui lòng kiểm tra thông tin của bạn.");
         setLoading(false);
@@ -100,7 +100,7 @@ const SignInComponent = () => {
     }
   };
 
-  
+  // Hiển thị loading khi đang chờ role hoặc đang submit
   if (loading || userLoading || pendingRedirect) {
     return (
       <div className="d-flex justify-content-center align-items-center" style={{ minHeight: 300 }}>
