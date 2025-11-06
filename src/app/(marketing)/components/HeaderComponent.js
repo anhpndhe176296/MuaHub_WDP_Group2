@@ -8,7 +8,7 @@
   import { useApp } from "@muahub/app/contexts/AppContext";
   import { ROLE_MANAGER } from "@muahub/constants/System";
   import { useSession, signOut } from "next-auth/react";
-  import { Badge, IconButton, Menu, MenuItem, CircularProgress, Typography, Box } from "@mui/material";
+  import {Menu, MenuItem, CircularProgress, Typography, Box } from "@mui/material";
   
   const HeaderComponent = () => {
   // Favorite count from localStorage
@@ -37,17 +37,17 @@
     const isLocalUserValid = currentUser && (currentUser.id || currentUser._id || currentUser.email);
     const isLoggedIn = !!(session?.user || isLocalUserValid);
     // Debug log
-    console.log("HeaderComponent - isLoggedIn:", isLoggedIn, "session:", session, "currentUser:", currentUser);
-    // Log user session info when logged in (Google hoặc thường)
-    useEffect(() => {
-      if (isLoggedIn) {
-        if (session?.user) {
-          console.log('[Header] User session (Google/next-auth):', session.user);
-        } else if (currentUser && Object.keys(currentUser).length > 0) {
-          console.log('[Header] User session (local):', currentUser);
-        }
-      }
-    }, [isLoggedIn, session, currentUser]);
+    // console.log("HeaderComponent - isLoggedIn:", isLoggedIn, "session:", session, "currentUser:", currentUser);
+    // // Log user session info when logged in (Google hoặc thường)
+    // useEffect(() => {
+    //   if (isLoggedIn) {
+    //     if (session?.user) {
+    //       console.log('[Header] User session (Google/next-auth):', session.user);
+    //     } else if (currentUser && Object.keys(currentUser).length > 0) {
+    //       console.log('[Header] User session (local):', currentUser);
+    //     }
+    //   }
+    // }, [isLoggedIn, session, currentUser]);
     const [allMakeups, setAllMakeups] = useState([]);
     const [searchValue, setSearchValue] = useState("");
     const [showResults, setShowResults] = useState(false);
@@ -76,29 +76,35 @@
     const router = useRouter();
 
     // Fetch notifications from API when user is logged in
-    useEffect(() => {
-      const fetchNotifications = async () => {
-        if (!isLoggedIn) return; // don't fetch for anonymous users
-        setLoadingNoti(true);
-        try {
-          const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
-          const userIdParam = currentUser?._id || currentUser?.id || currentUser?.userId;
-          let url = '/api/notifications/user';
-          if (userIdParam) url += `?userId=${encodeURIComponent(userIdParam)}`;
+    // Hàm fetch thông báo
+    const fetchNotifications = async () => {
+      if (!isLoggedIn) return;
+      setLoadingNoti(true);
+      try {
+        const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
+        const userIdParam = currentUser?._id || currentUser?.id || currentUser?.userId;
+        let url = '/api/notifications/user';
+        if (userIdParam) url += `?userId=${encodeURIComponent(userIdParam)}`;
+        const res = await fetch(url, {
+          headers: token ? { Authorization: `Bearer ${token}` } : undefined,
+        });
+        const data = await res.json();
+        if (data.success) setNotifications(data.data);
+      } catch (err) {
+        setNotifications([]);
+      } finally {
+        setLoadingNoti(false);
+      }
+    };
 
-          const res = await fetch(url, {
-            headers: token ? { Authorization: `Bearer ${token}` } : undefined,
-          });
-          const data = await res.json();
-          if (data.success) setNotifications(data.data);
-        } catch (err) {
-          setNotifications([]);
-        } finally {
-          setLoadingNoti(false);
-        }
-      };
+    // Polling: tự động cập nhật thông báo mỗi 30 giây, dừng khi menu đang mở
+    useEffect(() => {
       fetchNotifications();
-    }, [isLoggedIn, currentUser]);
+      const interval = setInterval(() => {
+        if (!anchorEl) fetchNotifications();
+      }, 30000); // 30 giây
+      return () => clearInterval(interval);
+    }, [isLoggedIn, anchorEl, currentUser?._id]);
 
     // Refetch notifications when user just logged in (isLoggedIn chuyển từ false sang true)
     const prevIsLoggedIn = useRef(isLoggedIn);
@@ -149,9 +155,9 @@
         setNotifications((prev) => prev.map((n) => n._id === item._id ? { ...n, isRead: true } : n));
       } catch (e) {}
       if (item.orderId) {
-        router.push(`/danh-sach-dat-lich?orderId=${item.orderId}`);
+        router.push(`/trang-ca-nhan?orderId=${item.orderId}`);
       } else {
-        router.push('/danh-sach-dat-lich');
+        router.push('/');
       }
       setAnchorEl(null);
     };
@@ -430,7 +436,9 @@
                   anchorEl={anchorEl}
                   open={Boolean(anchorEl)}
                   onClose={handleCloseMenu}
-                  PaperProps={{ style: { minWidth: 320, maxHeight: 400 } }}
+                  PaperProps={{
+                    sx: { width: 350, maxHeight: 400, p: 0, mt: 1.5, overflowY: "auto" },
+                  }}
                 >
                   <Box px={2} py={1} display="flex" alignItems="center" justifyContent="space-between">
                     <Typography variant="subtitle1">Thông báo</Typography>

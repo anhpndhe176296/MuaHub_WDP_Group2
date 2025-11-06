@@ -7,7 +7,7 @@ import { useCallback, useEffect, useState } from "react";
 import { Table, Button, Modal, Form } from "react-bootstrap";
 import toast from "react-hot-toast";
 
-const HistoryBookingComponent = ({ currentUser }) => {
+const HistoryBookingComponent = ({ currentUser, highlightOrderId }) => {
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
@@ -24,12 +24,12 @@ const HistoryBookingComponent = ({ currentUser }) => {
 
   const fetchBookings = useCallback(async () => {
     setLoading(true);
-    const res = await SendRequest("GET", "/api/orders/user", { userId: currentUser._id });
+    const res = await SendRequest("GET", "/api/orders/user", { userId: currentUser.id });
     if (res.payload) {
       setBookings(res.payload);
     }
     setLoading(false);
-  }, [currentUser._id]);
+  }, [currentUser.id]);
 
   const handleCancelBooking = async () => {
     if (!currentUser.bank_info_number || !currentUser.bank_info) {
@@ -44,7 +44,7 @@ const HistoryBookingComponent = ({ currentUser }) => {
       totalAmount: selectedBooking.deposit,
       discount: 10,
       type: "cancel_booking",
-      userId: currentUser._id,
+      userId: currentUser.id,
       bank_info_number: currentUser.bank_info_number,
       bank_info: currentUser.bank_info,
       name: currentUser.name,
@@ -58,7 +58,7 @@ const HistoryBookingComponent = ({ currentUser }) => {
 
   useEffect(() => {
     fetchBookings();
-  }, [currentUser._id, fetchBookings, showModal]);
+  }, [currentUser.id, fetchBookings, showModal]);
 
   useEffect(() => {
     const fetchFeedbacks = async () => {
@@ -68,18 +68,18 @@ const HistoryBookingComponent = ({ currentUser }) => {
       }
     };
     fetchFeedbacks();
-  }, [currentUser._id]);
+  }, [currentUser.id]);
 
   // disable feedback for bookings that have already been rated
   const ratedOrderIds = userFeedback
-    .filter((feedback) => feedback.userId === currentUser._id)
+    .filter((feedback) => feedback.userId === currentUser.id)
     .map((feedback) => feedback.orderId);
   const bookingsFiltered = bookings.filter((booking) => !ratedOrderIds.includes(booking._id));
 
   const servicesRated = [];
   bookingsFiltered.forEach((booking) => {
     const matchedOrder = userFeedback.find(
-      (feedback) => feedback.orderId === booking._id && feedback.userId === currentUser._id
+      (feedback) => feedback.orderId === booking._id && feedback.userId === currentUser.id
     );
 
     if (matchedOrder && matchedOrder.service) {
@@ -97,7 +97,7 @@ const HistoryBookingComponent = ({ currentUser }) => {
     }
 
     const payload = {
-      userId: currentUser._id,
+      userId: currentUser.id,
       orderId: serviceFeedback._id,
       serviceId: serviceFeedback.serviceId,
       title: feedback.title,
@@ -122,7 +122,7 @@ const HistoryBookingComponent = ({ currentUser }) => {
     }
 
     const fetchBookings = async () => {
-      const res = await SendRequest("GET", "/api/orders", { userId: currentUser._id });
+      const res = await SendRequest("GET", "/api/orders", { userId: currentUser.id });
       if (res) {
         setBookings(res.payload);
       }
@@ -267,9 +267,9 @@ const HistoryBookingComponent = ({ currentUser }) => {
             )}
             {bookings.map((booking) => {
               const { isAlreadyRated, canCancel, canRate, isToday, remainingTimeToCancel } = checkTime(booking);
-
+              const isHighlighted = highlightOrderId && booking._id === highlightOrderId;
               return (
-                <tr key={booking._id}>
+                <tr key={booking._id} style={isHighlighted ? { backgroundColor: '#ffe082', fontWeight: 'bold' } : {}}>
                   <td>
                     <Link href={`/make-up/${booking.serviceId}`}>{booking.service?.serviceName}</Link>
                   </td>
@@ -341,8 +341,10 @@ const HistoryBookingComponent = ({ currentUser }) => {
           </div>
         )}
         {bookings.map((booking) => {
-          const { isAlreadyRated, canCancel, canRate, isToday, remainingTimeToCancel } = checkTime(booking); return (
-            <div key={booking._id} className="card mb-3 shadow-sm">
+          const { isAlreadyRated, canCancel, canRate, isToday, remainingTimeToCancel } = checkTime(booking);
+          const isHighlighted = highlightOrderId && booking._id === highlightOrderId;
+          return (
+            <div key={booking._id} className={`card mb-3 shadow-sm${isHighlighted ? ' border-warning bg-warning-subtle' : ''}`}> 
               <div className="card-body">
                 <h6 className="card-title mb-1">
                   <Link href={`/make-up/${booking.serviceId}`} className="text-decoration-none">
