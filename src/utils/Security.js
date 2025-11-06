@@ -1,33 +1,6 @@
 "use strict";
 
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
->>>>>>> Stashed changes
-import { CRYPTO_IV, CRYPTO_KEY } from "@quanlysanbong/constants/MainContent";
-=======
 import { CRYPTO_IV, CRYPTO_KEY } from "@muahub/constants/MainContent";
->>>>>>> Stashed changes
-<<<<<<< Updated upstream
-=======
-import { CRYPTO_IV, CRYPTO_KEY } from "@muahub/constants/MainContent";
->>>>>>> Stashed changes
-=======
-<<<<<<< Updated upstream
-=======
-=======
-import { CRYPTO_IV, CRYPTO_KEY } from "@muahub/constants/MainContent";
->>>>>>> Stashed changes
-=======
-import { CRYPTO_IV, CRYPTO_KEY } from "@muahub/constants/MainContent";
->>>>>>> Stashed changes
->>>>>>> Stashed changes
->>>>>>> Stashed changes
 import CryptoJS from "crypto-js";
 
 const key = CryptoJS.enc.Hex.parse(CRYPTO_KEY);
