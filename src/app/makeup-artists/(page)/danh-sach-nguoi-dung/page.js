@@ -29,15 +29,7 @@ import toast from "react-hot-toast";
 const UserListPage = () => {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(false);
-<<<<<<< Updated upstream
-  const [saleRequests, setSaleRequests] = useState([]);
-=======
-<<<<<<< Updated upstream
-  const [saleRequests, setSaleRequests] = useState([]);
-=======
   const [MUARequests, setMUARequests] = useState([]);
->>>>>>> Stashed changes
->>>>>>> Stashed changes
   const [confirmDialog, setConfirmDialog] = useState({
     open: false,
     user: null,
@@ -48,27 +40,12 @@ const UserListPage = () => {
     setLoading(true);
     try {
       // eslint-disable-next-line no-undef
-<<<<<<< Updated upstream
-=======
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-      const [userRes, saleReqRes] = await Promise.all([
-        SendRequest("GET", "/api/users", { role: ROLE_MANAGER.USER }),
-        fetch("/api/request-add-sale").then((r) => r.json())
-      ]);
-      if (userRes.payload) setUsers(userRes.payload);
-      if (saleReqRes.success) setSaleRequests(saleReqRes.data || []);
-<<<<<<< Updated upstream
-=======
-=======
       const [userRes, MUAReqRes] = await Promise.all([
         SendRequest("GET", "/api/users", { role: ROLE_MANAGER.USER }),
         fetch("/api/request-add-MUA").then((r) => r.json())
       ]);
       if (userRes.payload) setUsers(userRes.payload);
       if (MUAReqRes.success) setMUARequests(MUAReqRes.data || []);
->>>>>>> Stashed changes
->>>>>>> Stashed changes
     } catch (error) {
       console.error("Error fetching users:", error);
     } finally {
@@ -90,23 +67,10 @@ const UserListPage = () => {
       // 1. Cập nhật role user
       await SendRequest("PUT", "/api/users", {
         id: user._id,
-<<<<<<< Updated upstream
-=======
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-        role: "sale"
-      });
-      // 2. Xoá request khỏi sale_requests
-      await fetch("/api/request-add-sale", {
-<<<<<<< Updated upstream
-=======
-=======
         role: "MUA"
       });
       // 2. Xoá request khỏi MUA_requests
       await fetch("/api/request-add-MUA", {
->>>>>>> Stashed changes
->>>>>>> Stashed changes
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email: user.email })
@@ -157,15 +121,7 @@ const UserListPage = () => {
   };
 
   // Kiểm tra user có đơn pending không
-<<<<<<< Updated upstream
-  const hasPendingRequest = (email) => saleRequests.some((req) => req.email === email && req.status === "pending");
-=======
-<<<<<<< Updated upstream
-  const hasPendingRequest = (email) => saleRequests.some((req) => req.email === email && req.status === "pending");
-=======
   const hasPendingRequest = (email) => MUARequests.some((req) => req.email === email && req.status === "pending");
->>>>>>> Stashed changes
->>>>>>> Stashed changes
 
   // Render trạng thái tài khoản
   const renderAccountStatus = (status) => {
