@@ -32,11 +32,7 @@ const BookingHistoryPage = () => {
     setLoading(true);
     try {
       const res = await SendRequest("GET", "/api/orders", {
-<<<<<<< Updated upstream
-        ownerId: currentUser.role === ROLE_MANAGER.SALE ? currentUser._id : ""
-=======
         ownerId: currentUser.role === ROLE_MANAGER.SALE ? currentUser.id : ""
->>>>>>> Stashed changes
       });
       if (res.payload) {
         setBookings(res.payload);

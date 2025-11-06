@@ -8,15 +8,10 @@ import { useApp } from "@muahub/app/contexts/AppContext";
 import { ROLE_MANAGER_TEXT } from "@muahub/constants/System";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-<<<<<<< Updated upstream
-const Profile = () => {
-  const { currentUser } = useApp();
-=======
 import { useSession, signOut } from "next-auth/react";
 const Profile = () => {
   const { currentUser, refreshUserData } = useApp();
   const { data: session } = useSession();
->>>>>>> Stashed changes
   const [anchorEl2, setAnchorEl2] = useState(null);
   const [currentUserMe, setCurrentUserMe] = useState(null);
   const [remainingDays, setRemainingDays] = useState(0);
@@ -28,12 +23,6 @@ const Profile = () => {
     setAnchorEl2(null);
   };
 
-<<<<<<< Updated upstream
-  const logout = () => {
-    // Logout
-    localStorage.removeItem("token");
-    router.push("/dang-nhap");
-=======
   const logout = async () => {
     try {
       // Xóa token và các key phụ trong localStorage
@@ -58,7 +47,6 @@ const Profile = () => {
       await refreshUserData();
       window.location.href = "/";
     }
->>>>>>> Stashed changes
   };
   // call api me
   const fetchMe = useCallback(async () => {
