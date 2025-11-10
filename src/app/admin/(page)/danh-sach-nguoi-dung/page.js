@@ -35,14 +35,11 @@ const UserListPage = () => {
     user: null,
     action: null
   });
-<<<<<<< Updated upstream
-=======
   // Filter state
   const [filter, setFilter] = useState({
     search: '',
     status: 'all', // all, active, locked
   });
->>>>>>> Stashed changes
 
   const fetchData = useCallback(async () => {
     setLoading(true);
@@ -142,8 +139,6 @@ const UserListPage = () => {
     );
   };
 
-<<<<<<< Updated upstream
-=======
   // Filtered users
   // Phân trang
   const [page, setPage] = useState(1);
@@ -169,7 +164,6 @@ const UserListPage = () => {
   const totalPages = Math.ceil(totalRows / rowsPerPage) || 1;
   const pagedUsers = filteredUsers.slice((page - 1) * rowsPerPage, page * rowsPerPage);
 
->>>>>>> Stashed changes
   return (
     <PageContainer title="Danh sách người dùng" description="Danh sách tất cả người dùng trong hệ thống">
       <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
@@ -178,8 +172,6 @@ const UserListPage = () => {
           Tải lại
         </Button>
       </Box>
-<<<<<<< Updated upstream
-=======
       {/* Filter UI */}
       <Box display="flex" gap={2} mb={2}>
         <input
@@ -199,65 +191,11 @@ const UserListPage = () => {
           <option value="locked">Đã khóa</option>
         </select>
       </Box>
->>>>>>> Stashed changes
       {loading ? (
         <Box display="flex" justifyContent="center" alignItems="center" height="50vh">
           <CircularProgress />
         </Box>
       ) : (
-<<<<<<< Updated upstream
-        <TableContainer component={Paper}>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell>Avatar</TableCell>
-                <TableCell>Email</TableCell>
-                <TableCell>Điện thoại</TableCell>
-                <TableCell>Tên</TableCell>
-                <TableCell>Địa chỉ</TableCell>
-                <TableCell>Ngày đăng ký</TableCell>
-                <TableCell>Trạng thái</TableCell>
-                {/* <TableCell>Duyệt đơn</TableCell> */}
-                <TableCell>Thao tác</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {users.map((user) => (
-                <TableRow key={user._id}>
-                  <TableCell>
-                    <img src={user.avatar || "/img/carousel.jpg"} alt={user.name} width="50" height="50" />
-                  </TableCell>
-                  <TableCell>{user.email}</TableCell>
-                  <TableCell>{user.phone}</TableCell>
-                  <TableCell>{user.name}</TableCell>
-                  <TableCell>{user.address}</TableCell>
-                  <TableCell>{convertDateTime(user.created_at)}</TableCell>
-                  <TableCell>{renderAccountStatus(user.status)}</TableCell>
-                  {/* <TableCell>
-                    {hasPendingRequest(user.email) ? (
-                      <Button variant="contained" color="success" size="small" onClick={() => handleApprove(user)}>
-                        Duyệt
-                      </Button>
-                    ) : (
-                      <span style={{ color: "#aaa" }}>-</span>
-                    )}
-                  </TableCell> */}
-                  <TableCell>
-                    <Button
-                      variant="contained"
-                      color={user.status === false ? "success" : "error"}
-                      size="small"
-                      onClick={() => handleToggleAccountStatus(user)}
-                    >
-                      {user.status === false ? "Mở khóa" : "Khóa tài khoản"}
-                    </Button>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-=======
         <>
           <TableContainer component={Paper}>
             <Table>
@@ -344,7 +282,6 @@ const UserListPage = () => {
             </div>
           </Box>
         </>
->>>>>>> Stashed changes
       )}
 
       {/* Dialog xác nhận */}

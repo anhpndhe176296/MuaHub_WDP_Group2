@@ -3,7 +3,7 @@ import { MAIN_URL_APP } from "@muahub/constants/MainContent";
 const META_DATA = {
   TITLE: "Quản Lý Gói dịch vụ - Thuê Gói dịch vụ",
   DESCRIPTION:
-    "Quản Lý Gói dịch vụ là nền tảng hàng đầu để thuê dịch vụ makeup. Dễ dàng tìm và đặt dịch vụ makeup gần bạn với giao diện thân thiện của chúng tôi",
+    "Quản Lý Gói dịch vụ là nền tảng hàng đầu để thuê dịch vụ makeup. Dễ dàng tìm và đặt dịch vụ makeup gần bạn với giao diện thân thiện của chúng tôi.",
   APPLICATION_NAME: "Quản Lý Gói dịch vụ",
   GENERATOR: "NextJS",
   ROBOTS: "index, follow",

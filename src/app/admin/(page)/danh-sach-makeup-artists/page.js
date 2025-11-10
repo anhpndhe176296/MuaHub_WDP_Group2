@@ -34,14 +34,11 @@ const UserListPage = () => {
     user: null,
     action: null
   });
-<<<<<<< Updated upstream
-=======
   // Filter state
   const [filter, setFilter] = useState({
     search: '',
     status: 'all', // all, active, locked
   });
->>>>>>> Stashed changes
 
   const fetchData = useCallback(async () => {
     setLoading(true);
@@ -88,6 +85,13 @@ const UserListPage = () => {
       });
 
       if (response) {
+        if (action === "lock") {
+          try {
+            await SendRequest("PUT", "/api/services/lock-mua", { muaId: user._id });
+          } catch (err) {
+            console.error("Error locking MUA services:", err);
+          }
+        }
         // Cập nhật local state
         setUsers((prevUsers) => prevUsers.map((u) => (u._id === user._id ? { ...u, status: newStatus } : u)));
         toast.success(action === "lock" ? "Đã khóa tài khoản thành công!" : "Đã mở khóa tài khoản thành công!");
@@ -157,8 +161,6 @@ const UserListPage = () => {
     }).format(amount);
   };
 
-<<<<<<< Updated upstream
-=======
   // Filtered users
   // Phân trang
   const [page, setPage] = useState(1);
@@ -184,7 +186,6 @@ const UserListPage = () => {
   const totalPages = Math.ceil(totalRows / rowsPerPage) || 1;
   const pagedUsers = filteredUsers.slice((page - 1) * rowsPerPage, page * rowsPerPage);
 
->>>>>>> Stashed changes
   return (
     <PageContainer title="Danh sách chủ dịch vụ makeup" description="Danh sách tất cả chủ dịch vụ makeup trong hệ thống">
       <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
@@ -193,8 +194,6 @@ const UserListPage = () => {
           Tải lại
         </Button>
       </Box>
-<<<<<<< Updated upstream
-=======
       {/* Filter UI */}
       <Box display="flex" gap={2} mb={2}>
         <input
@@ -214,67 +213,11 @@ const UserListPage = () => {
           <option value="locked">Đã khóa</option>
         </select>
       </Box>
->>>>>>> Stashed changes
       {loading ? (
         <Box display="flex" justifyContent="center" alignItems="center" height="50vh">
           <CircularProgress />
         </Box>
       ) : (
-<<<<<<< Updated upstream
-        <TableContainer component={Paper}>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell>Avatar</TableCell>
-                <TableCell>Email</TableCell>
-                <TableCell>Điện thoại</TableCell>
-                <TableCell>Tên</TableCell>
-                <TableCell>Địa chỉ</TableCell>
-                <TableCell>Ngân hàng</TableCell>
-                <TableCell>Số tài khoản</TableCell>
-                <TableCell>Loại thanh toán</TableCell>
-                <TableCell>Tổng đã thu</TableCell>
-                <TableCell>Ngày đăng ký</TableCell>
-                <TableCell>Trạng thái</TableCell>
-                <TableCell>Thao tác</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {users.map((user) => (
-                <TableRow key={user._id}>
-                  <TableCell>
-                    <img src={user.avatar || "/img/carousel.jpg"} alt={user.name} width="50" height="50" />
-                  </TableCell>
-                  <TableCell>{user.email}</TableCell>
-                  <TableCell>{user.phone}</TableCell>
-                  <TableCell>{user.name}</TableCell>
-                  <TableCell>{user.address}</TableCell>
-                  <TableCell>{user.bank_info || "-"}</TableCell>
-                  <TableCell>{user.bank_info_number || "-"}</TableCell>
-                  <TableCell>{renderPaymentType(user.payment_type)}</TableCell>
-                  <TableCell>
-                    <Typography variant="body2" fontWeight="bold" color="primary">
-                      {formatCurrency(user.payment_amount)}
-                    </Typography>
-                  </TableCell>
-                  <TableCell>{convertDateTime(user.created_at)}</TableCell>
-                  <TableCell>{renderAccountStatus(user.status)}</TableCell>
-                  <TableCell>
-                    <Button
-                      variant="contained"
-                      color={user.status === false ? "success" : "error"}
-                      size="small"
-                      onClick={() => handleToggleAccountStatus(user)}
-                    >
-                      {user.status === false ? "Mở khóa" : "Khóa tài khoản"}
-                    </Button>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-=======
         <>
           <TableContainer component={Paper}>
             <Table>
@@ -363,7 +306,6 @@ const UserListPage = () => {
             </div>
           </Box>
         </>
->>>>>>> Stashed changes
       )}
 
       {/* Dialog xác nhận */}

@@ -10,34 +10,18 @@ export async function GET(req) {
     const db = client.db("accounts");
     const paymentsCollection = db.collection("website_payments");
 
-<<<<<<< Updated upstream
-    const url = new URL(req.url);
-    const ownerId = url.searchParams.get("ownerId");
-=======
-<<<<<<< Updated upstream
-    const url = new URL(req.url);
-    const ownerId = url.searchParams.get("ownerId");
-=======
 
     const url = new URL(req.url);
     const ownerId = url.searchParams.get("ownerId");
     const status = url.searchParams.get("status");
->>>>>>> Stashed changes
->>>>>>> Stashed changes
 
     let query = {};
     if (ownerId) {
       query.ownerId = new ObjectId(ownerId);
     }
-<<<<<<< Updated upstream
-=======
-<<<<<<< Updated upstream
-=======
     if (status) {
       query.status = status;
     }
->>>>>>> Stashed changes
->>>>>>> Stashed changes
 
     const payments = await paymentsCollection
       .aggregate([
@@ -51,7 +35,15 @@ export async function GET(req) {
           }
         },
         { $unwind: "$owner" },
-        { $sort: { created_at: -1 } }
+        { $sort: { created_at: -1 } },
+        // Loại bỏ trùng lặp theo ownerId + payment_package, chỉ lấy bản mới nhất
+        {
+          $group: {
+            _id: { ownerId: "$ownerId", payment_package: "$payment_package" },
+            doc: { $first: "$$ROOT" }
+          }
+        },
+        { $replaceRoot: { newRoot: "$doc" } }
       ])
       .toArray();
 

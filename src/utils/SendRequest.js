@@ -27,15 +27,7 @@ const SendRequest = async (method, url, data = {}) => {
       }
     });
     return {
-<<<<<<< Updated upstream
-      payload: response.data.data
-=======
-<<<<<<< Updated upstream
-      payload: response.data.data
-=======
       payload: response.data?.data || response.data || response
->>>>>>> Stashed changes
->>>>>>> Stashed changes
     };
   } catch (error) {
     console.error(error);
