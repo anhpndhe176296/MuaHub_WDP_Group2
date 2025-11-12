@@ -2,7 +2,8 @@ import clientPromise from "@muahub/lib/mongodb";
 import getObjectId from "@muahub/lib/getObjectId";
 import { NextResponse } from "next/server";
 import { validateToken } from "@muahub/lib/auth";
-
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "../auth/[...nextauth]/route";
 const DB_NAME = "services";
 const STADIUM_COLLECTION_NAME = "service";
 const COLLECTION_NAME = "orders";
@@ -92,11 +93,23 @@ export async function POST(req) {
     const dbUser = client.db("accounts");
     const accountsCollection = dbUser.collection("users");
 
-    const objectId = await validateToken(req);
 
-    let { serviceId, ownerId, field, time, date, deposit, fieldSlot, serviceLocationType, serviceLocation } = await req.json();
+    let { serviceId, ownerId, field, time, date, deposit, fieldSlot, serviceLocationType, serviceLocation, userId } = await req.json();
 
-    // Lấy dữ liệu vị trí từ object serviceLocation
+    let objectId = await validateToken(req);
+    if (!objectId) {
+      // Lấy từ session nếu chưa có
+      // console.log("No objectId from token, trying session...");
+      const session = await getServerSession(authOptions);
+      // console.log("Session obtained:", session);
+      if (session?.user?.id) {
+        objectId = getObjectId(session.user.id);
+        // console.log("objectId from session:", objectId);
+      }
+    }
+    if (!objectId) {
+      return NextResponse.json({ success: false, message: "Unauthorized" }, { status: 401 });
+    }
     const {
       extraFee = 0,
       distanceKm = 0,
@@ -108,9 +121,9 @@ export async function POST(req) {
 
     deposit = parseInt(deposit);
 
-  // Chuyển đổi kiểu dữ liệu nếu cần
-  const parsedExtraFee = extraFee ? parseInt(extraFee) : 0;
-  const parsedDistanceKm = distanceKm ? parseFloat(distanceKm) : 0;
+    // Chuyển đổi kiểu dữ liệu nếu cần
+    const parsedExtraFee = extraFee ? parseInt(extraFee) : 0;
+    const parsedDistanceKm = distanceKm ? parseFloat(distanceKm) : 0;
 
     const total = deposit;
 
@@ -124,36 +137,49 @@ export async function POST(req) {
     const bookingDate = new Date(date);
     today.setHours(0, 0, 0, 0);
     bookingDate.setHours(0, 0, 0, 0);
-    
+
     const isToday = bookingDate.getTime() === today.getTime();
-    
-    let newOrder = {
-      userId: objectId,
+
+
+    // Kiểm tra trùng đơn hàng
+    const existedOrder = await ordersCollection.findOne({
       serviceId: getObjectId(serviceId),
-      ownerId: getObjectId(ownerId),
-      field,
-      time,
-      deposit,
-      remaining: total - deposit,
-      status: isToday ? "deposit_confirmed" : "pending", // Tự động xác nhận cọc nếu đặt trong ngày
-      fieldSlot,
       date,
-      serviceLocationType: serviceLocationType || null,
-      serviceLocation: {
-        extraFee: parsedExtraFee,
-        distanceKm: parsedDistanceKm,
-        customerLat,
-        customerLng,
-        studioLat,
-        studioLng
-      },
-      created_at: new Date(),
-      updated_at: new Date()
-    };
+      time,
+      fieldSlot,
+      userId: objectId
+    });
 
-    const dataOrder = await ordersCollection.insertOne(newOrder);
-
-    newOrder = { ...newOrder, _id: dataOrder.insertedId };
+    let newOrder;
+    if (existedOrder) {
+      newOrder = existedOrder;
+    } else {
+      newOrder = {
+        userId: objectId,
+        serviceId: getObjectId(serviceId),
+        ownerId: getObjectId(ownerId),
+        field,
+        time,
+        deposit,
+        remaining: total - deposit,
+        status: isToday ? "deposit_confirmed" : "pending", // Tự động xác nhận cọc nếu đặt trong ngày
+        fieldSlot,
+        date,
+        serviceLocationType: serviceLocationType || null,
+        serviceLocation: {
+          extraFee: parsedExtraFee,
+          distanceKm: parsedDistanceKm,
+          customerLat,
+          customerLng,
+          studioLat,
+          studioLng
+        },
+        created_at: new Date(),
+        updated_at: new Date()
+      };
+      const dataOrder = await ordersCollection.insertOne(newOrder);
+      newOrder = { ...newOrder, _id: dataOrder.insertedId };
+    }
 
     // Notification logic
     const notificationsCollection = db.collection("notifications");
@@ -186,7 +212,7 @@ export async function POST(req) {
       created_at: now,
       updated_at: now
     });
-    
+
     // If same-day booking, notify user that deposit is automatically confirmed
     if (isToday) {
       await notificationsCollection.insertOne({
