@@ -53,7 +53,6 @@ export async function GET() {
   }
 }
 
-// API POST
 export async function POST(req) {
   try {
     const client = await clientPromise;
