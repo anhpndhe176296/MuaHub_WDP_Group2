@@ -32,22 +32,25 @@ export function AppProvider({ children }) {
         avatar: user1?.avatar || user2?.image || "",
         role: user1?.role || user2?.role || "user",
         active: user1?.active ?? user2?.active ?? true,
-        phone: user1?.phone || "",
-        address: user1?.address || "",
-        bank_info: user1?.bank_info || "",
-        bank_info_number: user1?.bank_info_number || "",
-        bio: user1?.bio || "",
-        payment_package: user1?.payment_package || null,
-        payment_type: user1?.payment_type || null,
-        withdrawn: user1?.withdrawn || 0,
+        phone: user1?.phone || user2?.phone || "",
+        address: user1?.address || user2?.address || "",
+        bank_info: user1?.bank_info || user2?.bank_info || "",
+        bank_info_number: user1?.bank_info_number || user2?.bank_info_number || "",
+        bio: user1?.bio || user2?.bio || "",
+        payment_package: user1?.payment_package || user2?.payment_package || null,
+        payment_type: user1?.payment_type || user2?.payment_type || null,
+        withdrawn: user1?.withdrawn || user2?.withdrawn || 0,
         created_at: user1?.created_at || user2?.created_at || "",
         updated_at: user1?.updated_at || user2?.updated_at || "",
         // Bổ sung các trường cần thiết
-        cccd: user1?.cccd || "",
-        totalPrice: user1?.totalPrice || 0,
-        payment_amount: user1?.payment_amount || 0,
-        payment_expiry: user1?.payment_expiry || "",
-        payment_history: user1?.payment_history || [],
+        cccd: user1?.cccd || user2?.cccd || "",
+        totalPrice: user1?.totalPrice || user2?.totalPrice || 0,
+        payment_amount: user1?.payment_amount || user2?.payment_amount || 0,
+        payment_expiry: user1?.payment_expiry || user2?.payment_expiry || "",
+        payment_history: user1?.payment_history || user2?.payment_history || [],
+        // Thêm các field từ Google session
+        googleId: user1?.googleId || user2?.googleId || "",
+        image: user1?.image || user2?.image || "",
       };
     };
 
@@ -56,7 +59,9 @@ export function AppProvider({ children }) {
       const token = localStorage.getItem("token") || "";
       if (!token) {
         // Nếu chưa có token backend, chỉ lấy từ session Google
-        setUser(normalizeUser({}, session.user));
+        const normalized = normalizeUser({}, session.user);
+        console.log("[AppContext] Normalized user (session only):", normalized);
+        setUser(normalized);
         setTimeout(() => setLoading(false), 0); // Đảm bảo setUser xong mới tắt loading
       } else {
         // Nếu có token backend, gọi fetchData để lấy user từ backend
@@ -93,7 +98,9 @@ export function AppProvider({ children }) {
           console.error("Error during fetching user data:", error);
         }
         // Luôn merge xong mới tắt loading
-        setUser(normalizeUser(userPayload, session?.user));
+        const normalized = normalizeUser(userPayload, session?.user);
+        console.log("[AppContext] Normalized user (backend + session):", normalized);
+        setUser(normalized);
         setTimeout(() => setLoading(false), 0);
       }
       loadingState.current = false;
