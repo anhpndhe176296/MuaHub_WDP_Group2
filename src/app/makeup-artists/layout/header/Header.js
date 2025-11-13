@@ -16,7 +16,7 @@ import PropTypes from "prop-types";
 import { useRouter } from "next/navigation";
 import Profile from "./Profile";
 import { IconBellRinging, IconMenu } from "@tabler/icons-react";
-
+import { useApp } from "../../../contexts/AppContext";
 const Header = ({ toggleMobileSidebar }) => {
   const AppBarStyled = styled(AppBar)(({ theme }) => ({
     boxShadow: "none",
@@ -37,18 +37,13 @@ const Header = ({ toggleMobileSidebar }) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
-
+ const { currentUser } = useApp();
   // Hàm fetch thông báo
   const fetchNotifications = async () => {
     setLoading(true);
     try {
-      let userId = null;
-      if (typeof window !== "undefined") {
-        userId = localStorage.getItem("userId");
-      }
-      const url = userId
-        ? `/api/notifications/owner?userId=${userId}`
-        : `/api/notifications/owner`;
+      // Lấy thẳng bằng currentUser
+      const url = `/api/notifications/owner?userId=${currentUser?._id || currentUser?.id}`;
       const res = await fetch(url);
       const data = await res.json();
       if (data.success) setNotifications(data.data || []);
@@ -66,7 +61,7 @@ const Header = ({ toggleMobileSidebar }) => {
       if (!anchorEl) fetchNotifications();
     }, 30000); // 30 giây
     return () => clearInterval(interval);
-  }, [anchorEl]);
+  }, [anchorEl, currentUser]);
 
   const handleReadAndGo = async (item) => {
     try {
@@ -103,7 +98,7 @@ const Header = ({ toggleMobileSidebar }) => {
   const handleShowMore = () => {
     setVisibleCount((prev) => Math.min(prev + 10, notifications.length));
   };
-
+//  console.log("notifications", notifications);
   return (
     <AppBarStyled position="sticky" color="default">
       <ToolbarStyled>
